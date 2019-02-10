@@ -1,0 +1,28 @@
+{
+  "name": "mmbackend",
+  "version": "1.0.0",
+  "description": "Backend for Middlemen project",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "npm test",
+    "build": "tsc",
+    "dev": "ts-node ./app/server.ts",
+    "start": "nodemon ./dist/server.js",
+    "prod": "npm run build && npm run start",
+    "tslint": "tslint --project tsconfig.json"
+  },
+  "author": "Gautam Panickar SS",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "debug": "^4.1.1",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.2",
+    "nodemon": "^1.18.9",
+    "winston": "^3.2.1"
+  }
+}
