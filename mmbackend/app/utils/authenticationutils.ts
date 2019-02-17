@@ -1,6 +1,8 @@
 import * as Crypto from 'crypto';
 import * as JWT from 'jsonwebtoken';
 import TokenData from '../types/user/tokendata';
+import DataStoredInToken from '../types/user/datastoredintoken';
+import Secret from '../utils/secret';
 
 export class AuthenticationUtils {
 
@@ -31,23 +33,17 @@ export class AuthenticationUtils {
         // Sets the expiry time to 7 days after the current date.
         expiryTime.setDate(expiryTime.getDate() + 7);
         const expiresIn: number = (expiryTime.getTime() / 1000);
-        const dataStoredInToken = {
-            _id: id,
-            email: email,
-            name: name
+        const dataStoredInToken: DataStoredInToken = {
+            _id: id.toString(),
+            email: email.toString(),
+            name: name.toString()
         };
-
-        // return JWT.sign({
-        //     _id: id,
-        //     email: email,
-        //     name: name,
-        //     exp: expiresIn,
-        // }, 'MY_SECRET'); // DO NOT KEEP YOUR SECRET IN THE CODE!
+        
         return {
             expiresIn,
             token: JWT.sign(
                 dataStoredInToken,
-                'MY_SECRET', 
+                Secret.JWT_SECRET, 
                 { expiresIn }
             )
         };

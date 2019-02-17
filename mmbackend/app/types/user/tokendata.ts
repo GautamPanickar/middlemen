@@ -1,6 +1,8 @@
+import DataStoredInToken from './datastoredintoken';
+
 interface TokenData {
-    token: string;
+    token: DataStoredInToken;
     expiresIn: number;
-  }
+}
   
 export default TokenData;

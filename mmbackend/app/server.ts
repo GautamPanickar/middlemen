@@ -1,13 +1,14 @@
 import App from './App';
 import * as DEBUG from 'debug';
 import * as HTTP from 'http';
+import Logger from './utils/logger';
+import Secret from './utils/secret';
 
-const PORT = 3000;
-
+const PORT = Secret.PORT;
 
 DEBUG('ts-express:server');
 App.set('port', PORT);
-console.log('Server listening on port : ' + PORT);
+Logger.info('Server listening on port : ' + PORT);
 
 const server = HTTP.createServer(App);
 server.listen(PORT);
@@ -25,11 +26,11 @@ function onError(error: NodeJS.ErrnoException): void {
     const bind = typeof PORT === 'string' ? 'Pipe ' + PORT : 'Port ' + PORT;
     switch (error.code) {
       case 'EACCES':
-        console.error(`${bind} requires elevated privileges`);
+        Logger.logError(`${bind} requires elevated privileges`);
         process.exit(1);
         break;
       case 'EADDRINUSE':
-        console.error(`${bind} is already in use`);
+        Logger.logError(`${bind} is already in use`);
         process.exit(1);
         break;
       default:

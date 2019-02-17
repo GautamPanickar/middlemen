@@ -1,7 +1,8 @@
 interface SecretKeys {
     ENVIRONMENT: string;
-    SESSION_SECRET: string;
+    JWT_SECRET: string;
     MONGODB_URI: string;
+    PORT: number;
 }
 
 export default SecretKeys;

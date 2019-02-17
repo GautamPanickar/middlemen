@@ -5,7 +5,10 @@ import * as Mongoose from 'mongoose';
 import Controller from './types/controller/controller';
 import AuthenticationController from './controllers/authenticationcontroller';
 import ErrorMiddleware from './middlewares/base/errormiddleware';
-
+import LoggerMiddleware from './middlewares/base/loggermiddleware';
+import AuthenticationMiddleware from './middlewares/base/authenticationmiddleware';
+import Secret from './utils/secret';
+import Logger from './utils/logger';
 
 class App {
 
@@ -16,7 +19,7 @@ class App {
         this.connectToTheDatabase();
         this.initializeBaseConfig();
         this.initializeControllers(controllers);
-        this.initializeErrorHandling();
+        this.initializeMiddleWares();
     }
 
     /**
@@ -31,7 +34,7 @@ class App {
             if ('OPTIONS' === req.method) {
                 res.sendStatus(200);
             } else {
-                console.log(`${req.ip} ${req.method} ${req.url}`);
+                Logger.info(`${req.ip} ${req.method} ${req.url}`);
                 next();
             }
         });
@@ -47,10 +50,12 @@ class App {
     }
 
     /**
-     * Initializes error handling.
+     * Initializes different middlewares.
      */
-    private initializeErrorHandling() {
+    private initializeMiddleWares() {
         this.app.use(ErrorMiddleware);
+        this.app.use(LoggerMiddleware);
+        this.app.use(AuthenticationMiddleware);
     }
 
     /**
@@ -67,17 +72,10 @@ class App {
      * Initialize db connection
      */
     private connectToTheDatabase(): void {
-        // const {
-        //   MONGO_USER,
-        //   MONGO_PASSWORD,
-        //   MONGO_PATH,
-        // } = process.env;
-        // Mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
-        console.log('Hello');
-        Mongoose.connect('mongodb://localhost:27017/middlemen', {useNewUrlParser: true}).then( () => {
-            console.log('MongoDB connection established successfully!');
+        Mongoose.connect(Secret.MONGODB_URI, {useNewUrlParser: true}).then( () => {
+            Logger.info('MongoDB connection established successfully!');
         }).catch(err => {
-            console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
+            Logger.info('MongoDB connection error. Please make sure MongoDB is running. ' + err);
             process.exit();
         });
     }

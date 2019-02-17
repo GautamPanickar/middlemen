@@ -1,5 +1,5 @@
 import  * as Winston from 'winston';
-import * as Secret from './secret';
+import Secret from './secret';
 
 class Logger {
     private logger: Winston.Logger;
@@ -15,7 +15,7 @@ class Logger {
         this.logger = Winston.createLogger({
             transports: [
                 new (Winston.transports.Console)({ 
-                    level: Secret.default.ENVIRONMENT === 'production' ? 'error' : 'debug' 
+                    level: Secret.ENVIRONMENT === 'production' ? 'error' : 'debug' 
                 }),
                 new (Winston.transports.File)({ 
                     filename: 'debug.log', 
@@ -24,7 +24,7 @@ class Logger {
             ]
         });
 
-        if (Secret.default.ENVIRONMENT !== 'production') {
+        if (Secret.ENVIRONMENT !== 'production') {
             this.logger.debug('Logging initialized at debug level');
         }
     }
@@ -34,6 +34,7 @@ class Logger {
      * @param message
      */
     public info(message: string): void {
+        console.log(message);
         this.logger.info(message);
     }
 
@@ -42,6 +43,7 @@ class Logger {
      * @param message
      */
     public logError(message: string): void {
+        console.log(message);
         this.logger.error(message);
     }
 
@@ -50,6 +52,7 @@ class Logger {
      * @param message
      */
     public debug(message: string): void {
+        console.log(message);
         this.logger.debug(message);
     }
 }
