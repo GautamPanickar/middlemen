@@ -15,3 +15,4 @@
 .env.mm
 
 npm-debug.log*
+debug.log

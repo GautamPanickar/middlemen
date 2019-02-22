@@ -1,5 +1,4 @@
-import Logger from './logger';
-import dotenv from 'dotenv';
+import * as Dotenv from 'dotenv';
 import * as fs from 'fs';
 import SecretKeys from '../types/config/secretkeys';
 
@@ -17,14 +16,14 @@ class Secret {
      */
     public static get Secret(): SecretKeys {
         if (fs.existsSync('.env')) {
-            Logger.logError('Using .env file to supply config environment variables');
-            dotenv.config({ path: '.env' });
+            console.log('Using .env file to supply config environment variables');
+            Dotenv.config({ path: '.env' });
         } else {
-            Logger.debug('Using .env.mm file to supply config environment variables');
-            dotenv.config({ path: '.env.mm' });  // you can delete this after you create your own .env file!
+            console.log('Using .env.mm file to supply config environment variables');
+            Dotenv.config({ path: `${__dirname}/../../.env.mm` });
         }
 
-        secretValues.ENVIRONMENT = process.env['NODE_ENV'];
+        secretValues.ENVIRONMENT = process.env['NODE_ENV'];        
         const isProduction: boolean = secretValues.ENVIRONMENT === 'production'; // Anything else is treated as 'dev'
         
         secretValues.JWT_SECRET = process.env['JWT_SECRET'];
@@ -32,17 +31,17 @@ class Secret {
         secretValues.PORT = parseInt(process.env['PORT']);
 
         if (!secretValues.JWT_SECRET) {
-            Logger.logError('No JWT secret. Set JWT_SECRET environment variable.');
+            console.log('No JWT secret. Set JWT_SECRET environment variable.');
             process.exit(1);
         }
         
         if (!secretValues.MONGODB_URI) {
-            Logger.logError('No mongo connection string. Set MONGODB_URI environment variable.');
+            console.log('No mongo connection string. Set MONGODB_URI environment variable.');
             process.exit(1);
         }
 
         if (!secretValues.PORT) {
-            Logger.logError('Server listening port not set.');
+            console.log('Server listening port not set.');
             process.exit(1);
         }
 
