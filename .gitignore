@@ -1,0 +1,24 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# expo
+.expo/
+
+# dependencies
+# backend
+/mmbackend/node_modules
+/mmbackend/dist
+
+# frontend React
+/mmfrontend/react/node_modules
+/mmfrontend/react/dist
+
+# backend env variables
+/mmbackend/.env.local
+/mmbackend/.env.development.local
+/mmbackend/.env.test.local
+/mmbackend/.env.production.local
+/mmbackend/.env.mm
+
+# backend logs
+/mmbackend/npm-debug.log*
+/mmbackend/debug.log

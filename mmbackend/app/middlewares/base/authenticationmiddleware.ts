@@ -7,6 +7,11 @@ import TokenData from  '../../types/user/tokendata';
 import { UserModel } from '../../models/usermodel';
 
 async function AuthenticationMiddleware(request: Request, response: Response, next: NextFunction) {
+    // For registration and base url there is no need for a check on authenticity
+    if (request.originalUrl.indexOf('register') >= 0) {        
+        next();
+        return;
+    }
     const cookies = request.cookies;
     if (cookies && cookies.Authorization) {
         try {

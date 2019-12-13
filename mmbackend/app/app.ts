@@ -52,10 +52,10 @@ class App {
     /**
      * Initializes different middlewares.
      */
-    private initializeMiddleWares() {
-        this.app.use(ErrorMiddleware);
+    private initializeMiddleWares() {        
         this.app.use(LoggerMiddleware);
         this.app.use(AuthenticationMiddleware);
+        this.app.use(ErrorMiddleware);        
     }
 
     /**

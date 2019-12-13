@@ -7,6 +7,7 @@
     "test": "npm test",
     "build": "tsc",
     "dev": "ts-node ./app/server.ts",
+    "dev:debug": "node --inspect --require ts-node/register ./app/server.ts",
     "start": "nodemon ./dist/server.js",
     "prod": "npm run build && npm run start",
     "tslint": "tslint --project tsconfig.json"
@@ -24,6 +25,8 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.2",
     "nodemon": "^1.18.9",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3333",
     "winston": "^3.2.1"
   }
 }
