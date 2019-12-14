@@ -12,7 +12,7 @@ module.exports = {
     devServer: {
         // 'contentBase' - Tells the server where to serve content from. 
         // This is only necessary if you want to serve static files.
-        contentBase: path.resolve(__dirname, 'content'),
+        contentBase: path.resolve(__dirname, '/content/'),
         compress: true,
         port: 8080
     },
