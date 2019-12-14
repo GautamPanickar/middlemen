@@ -2,11 +2,14 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
         main: './src/app.tsx',
-        global: './src/staticassets.ts', 
+        // Currently cusing one chunk, if at a later point you are interested in splitting bundles,
+        // do it as given below. Or refer code splitting in webpack.
+        // global: './src/staticassets.ts', 
     },
     output: {
         path: path.join(__dirname, '/dist'),
@@ -61,11 +64,20 @@ module.exports = {
         // This is necessary to let webpack know your index file.
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'index.html'),
-            chunks: ['main', 'global'],
+            // When separate chunks are needed it can be specified as follows
+            // chunks: ['main', 'global'],
+            chunks: ['main'],
             chunksSortMode: 'manual',
         }),
         // This is used for generating css bundles
-        new ExtractTextPlugin('[name].css')
+        // Not using this for the time being, as the CSS is currently linked via
+        // new ExtractTextPlugin('[name].css'),
+
+        // To prevent the public path issue when loading external static css, this needs to be done
+        new CopyWebpackPlugin([
+            { from: './content/', to: 'content' },
+            // { from: './content/img/favicon.ico', to: 'favicon.ico' }
+        ]),
     ],
 
     /**
