@@ -1,42 +1,53 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    entry: "./src/app.tsx",
+    entry: {
+        main: './src/app.tsx',
+        global: './src/staticassets.ts', 
+    },
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: 'bundle.min.js'
+        filename: '[name].bundle.js',
+        chunkFilename: '[id].chunk.js'
     },
 
     devServer: {
         // 'contentBase' - Tells the server where to serve content from. 
         // This is only necessary if you want to serve static files.
-        contentBase: path.resolve(__dirname, '/content/'),
+        contentBase: path.resolve(__dirname, '/dist/'),
         compress: true,
         port: 8080
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    devtool: 'source-map',
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".json", ".js", ".css"]
+        extensions: ['.ts', '.tsx', '.json', '.js', '.css']
     },
 
     module: {
         rules: [
             // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-            { test: /\.tsx?$/, loader: "ts-loader" },
+            { test: /\.tsx?$/, loader: 'ts-loader' },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+            { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
 
             // For css loader
             {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
+            },
+
+            // Used for loading fonts and images
+            {
+                test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+                loader: 'file-loader?name=assets/[name].[hash].[ext]'
             }
         ]
     },
@@ -49,8 +60,12 @@ module.exports = {
         }),
         // This is necessary to let webpack know your index file.
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'index.html')
-        })
+            template: path.resolve(__dirname, 'index.html'),
+            chunks: ['main', 'global'],
+            chunksSortMode: 'manual',
+        }),
+        // This is used for generating css bundles
+        new ExtractTextPlugin('[name].css')
     ],
 
     /**
@@ -64,7 +79,7 @@ module.exports = {
      * ---------------------------------------------------------
      */
     // externals: {
-    //     "react": "React",
-    //     "react-dom": "ReactDOM"
+    //     'react': 'React',
+    //     'react-dom': 'ReactDOM'
     // }
 };
