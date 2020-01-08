@@ -1,10 +1,6 @@
-import UserDTO from '../../dtos/user/userdto';
-import { UserModel } from '../../models/usermodel';
-import User from '../../types/user/user';
+import { UserDTO } from '../../dtos/user/userdto';
 
 class UserManager {
-
-    private user = UserModel;
 
     public constructor() {
     }
@@ -14,7 +10,7 @@ class UserManager {
     }
 
     public isAnExisitingUser(userData: UserDTO): boolean {
-        return this.user.findOne({ email: userData.Email });
+        return false;
     }
 }
 

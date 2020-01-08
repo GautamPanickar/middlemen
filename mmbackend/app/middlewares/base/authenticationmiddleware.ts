@@ -4,11 +4,12 @@ import WrongAuthenticationTokenException from '../../utils/exceptions/authentica
 import Secret from '../../utils/secret';
 import * as JWT from 'jsonwebtoken';
 import TokenData from  '../../types/user/tokendata';
-import { UserModel } from '../../models/usermodel';
+import UserModel from '../../models/usermodel';
 
 async function AuthenticationMiddleware(request: Request, response: Response, next: NextFunction) {
-    // For registration and base url there is no need for a check on authenticity
-    if (request.originalUrl.indexOf('register') >= 0) {        
+    // For registration, base url and login there is no need for a check on authenticity
+    if (request.originalUrl.indexOf('register') >= 0 
+        || request.originalUrl.indexOf('login') >= 0) {        
         next();
         return;
     }

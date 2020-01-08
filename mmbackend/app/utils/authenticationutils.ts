@@ -28,15 +28,15 @@ export class AuthenticationUtils {
      * @param email 
      * @param name 
      */
-    public static generateAuthenticationToken(id: String, email: String, name: String): TokenData {
+    public static generateAuthenticationToken(id: string, email: string, name: string): TokenData {
         const expiryTime: Date = new Date();
         // Sets the expiry time to 7 days after the current date.
         expiryTime.setDate(expiryTime.getDate() + 7);
-        const expiresIn: number = (expiryTime.getTime() / 1000);
+        const expiresIn: number = Math.round(expiryTime.getTime() / 1000);
         const dataStoredInToken: DataStoredInToken = {
-            _id: id.toString(),
-            email: email.toString(),
-            name: name.toString()
+            _id: id,
+            email: email,
+            name: name
         };
         
         return {
