@@ -9,6 +9,7 @@ import LoggerMiddleware from './middlewares/base/loggermiddleware';
 import AuthenticationMiddleware from './middlewares/base/authenticationmiddleware';
 import Secret from './utils/secret';
 import Logger from './utils/logger';
+import SubscriptionController from './controllers/subscriptioncontroller';
 
 class App {
 
@@ -82,5 +83,6 @@ class App {
 }
 
 export default new App([
-    new AuthenticationController()
+    new AuthenticationController(),
+    new SubscriptionController()
 ]).app;

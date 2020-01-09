@@ -19,6 +19,10 @@ class BCryptEncryptionService implements EncryptionService {
         throw new Error("Method not implemented.");
     }
 
+    public arePasswordsEqual(password1: string, password2: string): Promise<boolean> {
+        return BCrypt.compare(password1, password2);
+    }
+
 }
 
 export default BCryptEncryptionService;

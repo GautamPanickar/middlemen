@@ -48,12 +48,20 @@ class AuthentiCationController implements Controller {
      * API for logging in as a user.
      */
     public login = async(request: Request, response: Response, next: NextFunction) => {
-        const user: UserDTO = request.body;
-        return response.send({
-            'status': 200,
-            'messsage' : 'Congratulations! you have logged in virtually.',
-            'user': user
-        });
+        const userData: UserDTO = request.body;
+        try {
+            const authenticatedUser: User = await this.authenticationService.authenticateUser(userData);
+            // Sending the response back
+            response.setHeader('Set-Cookie', [this.createCookie(authenticatedUser.token)]);
+            return response.send({
+                'status': 200,
+                'user': authenticatedUser,
+                'token': authenticatedUser.token,
+                'message': 'You are now logged in!'
+            });
+        } catch (error) {
+            next(error);
+        }
     }
 
     /**
@@ -62,7 +70,10 @@ class AuthentiCationController implements Controller {
     private logout = (request: Request, response: Response) => {
         // Clears the cookie on logout.
         response.setHeader('Set-Cookie', ['Authorization=;Max-age=0']);
-        return response.sendStatus(200);
+        return response.send({
+            'status': 200,
+            'message': 'You are now logged out!'
+        });
     }
 
     /**
