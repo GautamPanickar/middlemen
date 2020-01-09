@@ -10,6 +10,7 @@ import AuthenticationMiddleware from './middlewares/base/authenticationmiddlewar
 import Secret from './utils/secret';
 import Logger from './utils/logger';
 import SubscriptionController from './controllers/subscriptioncontroller';
+import UserController from './controllers/usercontroller';
 
 class App {
 
@@ -84,5 +85,6 @@ class App {
 
 export default new App([
     new AuthenticationController(),
-    new SubscriptionController()
+    new SubscriptionController(),
+    new UserController()
 ]).app;

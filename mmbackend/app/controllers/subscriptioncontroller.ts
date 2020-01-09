@@ -16,7 +16,7 @@ class SubscriptionController implements Controller {
     }
 
     /**
-     * Routes for authentication related purpose.
+     * Routes for susbcription related actions.
      */
     private initializeRoutes(): void {
         this.router.post(`${this.path}`, this.save);

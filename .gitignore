@@ -3,6 +3,10 @@
 # expo
 .expo/
 
+# vscode
+debug.log
+.vscode
+
 # dependencies
 # backend
 /mmbackend/node_modules

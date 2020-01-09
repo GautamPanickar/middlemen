@@ -18,7 +18,7 @@ class SubscriptionService {
      * @param userId 
      */
     public async findSubscriptionsForUser(userId: string) {
-        return null;
+        return this.subscription.find({user_id: userId});
     }
 
     /**
