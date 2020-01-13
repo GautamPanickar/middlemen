@@ -9,15 +9,18 @@ import { AuthenticationUtils } from '../../utils/authenticationutils';
 import WrongCredentialsException from '../../utils/exceptions/authentication/wrongcredentialsexception';
 import SomethingWrongException from '../../utils/exceptions/base/somethingwrongexception';
 import SubscriptionService from '../../services/subscription/subscriptionservice';
+import UserManager from '../../managers/usermanager';
 
 class AuthenticationService {
     private user = UserModel;
     private encryptionService: EncryptionService;
     private subscriptionService: SubscriptionService;
+    private userManager: UserManager;
 
     public constructor() {
         this.encryptionService = new BCryptEncryptionService();
         this.subscriptionService = new SubscriptionService();
+        this.userManager = new UserManager();
     }
 
     /**
@@ -33,6 +36,7 @@ class AuthenticationService {
         // Create the new user and return the token
         let token: TokenData;
         try {
+            this.userManager.setAuthorities(dto);
             const createdUser: User = await this.user.create({...dto,
                 password: hashedPassword, 
                 activated: true});

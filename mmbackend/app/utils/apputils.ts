@@ -52,4 +52,12 @@ export class AppUtils {
     public static areEqualIgnoringCase(a: string, b: string): boolean {
         return a.toUpperCase() === b.toUpperCase();
     }
+
+    /**
+     * Returns a unique company id.
+     * @returns {string}
+     */
+    public static get uniqueCompanyId(): string {
+        return 'COM-' + Math.random().toString(36).substr(2, 9) + '-' + Math.floor(1000 + Math.random() * 9000);
+    }
 }

@@ -3,6 +3,8 @@ import UserService from '../services/user/userservice';
 import User from '../types/user/user';
 import { AppUtils } from '../utils/apputils';
 import CustomException from '../utils/exceptions/customexception';
+import AuthorityDTO from 'dtos/user/authoritydto';
+import { Enums } from 'utils/enums';
 
 class UserManager {
     public userService: UserService
@@ -23,6 +25,26 @@ class UserManager {
             const existingUser: User = await this.userService.findById(dto.id);
             dto.password = existingUser.password;
             return await this.userService.saveUser(dto);
+        }
+    }
+
+    /**
+     * Sets the authorities for the user.
+     * @param dto 
+     */
+    public setAuthorities(dto: UserDTO): void {
+        dto.authorities = [];
+        const userAuthority: AuthorityDTO = {
+            code: Enums.Authorities.ROLE_USER,
+            name: 'ROLE_USER'
+        };
+        dto.authorities.push(userAuthority);
+        if (dto.newSubscription) {
+            const subscriberAuthority: AuthorityDTO = {
+                code: Enums.Authorities.ROLE_SUBSCRIBER,
+                name: 'ROLE_SUBSCRIBER'
+            };
+            dto.authorities.push(subscriberAuthority);
         }
     }
 

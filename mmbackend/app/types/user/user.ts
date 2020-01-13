@@ -1,5 +1,6 @@
 import TokenData from './tokendata';
 import Address from './address';
+import Auhtority from './authoritiy';
 
 interface User {
     _id: string;
@@ -12,6 +13,7 @@ interface User {
     resetKey?: string;
     contactAddress?: Address;
     billingAddress?: Address;
+    authorities: Auhtority[];
 }
 
 export default User;

@@ -1,5 +1,6 @@
 import { AddressDTO } from './addressdto';
 import SubscriptionDTO from 'dtos/subscription/susbcriptiondto';
+import AuthorityDTO from './authoritydto';
 
 export interface UserDTO {
   id: string;
@@ -13,4 +14,5 @@ export interface UserDTO {
   billingAddress?: AddressDTO;
   newSubscription?: SubscriptionDTO;
   subscriptions?: SubscriptionDTO[];
+  authorities?: AuthorityDTO[];
 }

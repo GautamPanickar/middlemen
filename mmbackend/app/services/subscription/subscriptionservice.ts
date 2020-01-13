@@ -60,6 +60,54 @@ class SubscriptionService {
             }
         }
     }
+
+    /**
+     * Activates the usbcription.
+     * @param id 
+     */
+    public async activateSubscription(id: string) {
+        try {
+            let subscritpionToUpdate: Subscription = await this.findById(id);
+            if (subscritpionToUpdate) {
+                subscritpionToUpdate.activated = true;
+                subscritpionToUpdate.companyId = AppUtils.uniqueCompanyId;
+                subscritpionToUpdate.details.status = Enums.SubscriptionStatus.ACTIVE;
+                let currentDate: Date = new Date();
+                let nextDate: Date = new Date();
+                nextDate.setFullYear(currentDate.getFullYear() + 1);
+                subscritpionToUpdate.details.startedOn = currentDate;
+                subscritpionToUpdate.details.nextBillingOn = nextDate;
+                subscritpionToUpdate.details.cancelledOn = null;
+                const updatedSubscription: Subscription = await this.subscription.save({...subscritpionToUpdate});
+                return updatedSubscription;
+            } else {
+                throw new CustomException("Could not find the subscription");
+            }
+        } catch (error) {
+            throw new SomethingWrongException(error);
+        }
+    }
+
+    /**
+     * Cancelas the usbcription.
+     * @param id 
+     */
+    public async cancelSubscription(id: string) {
+        try {
+            let subscritpionToUpdate: Subscription = await this.findById(id);
+            if (subscritpionToUpdate) {
+                subscritpionToUpdate.activated = false;
+                subscritpionToUpdate.details.status = Enums.SubscriptionStatus.CANCELED;
+                subscritpionToUpdate.details.cancelledOn = new Date();
+                const updatedSubscription: Subscription = await this.subscription.save({...subscritpionToUpdate});
+                return updatedSubscription;
+            } else {
+                throw new CustomException("Could not find the subscription");
+            }
+        } catch (error) {
+            throw new SomethingWrongException(error);
+        }
+    }
 }
 
 export default SubscriptionService;

@@ -22,6 +22,8 @@ class SubscriptionController implements Controller {
         this.router.post(`${this.path}`, this.save);
         this.router.get(`${this.path}/:id`, this.loadById);
         this.router.get(`${this.path}/user/:id`, this.loadByUser);
+        this.router.patch(`${this.path}/:id`, this.activate);
+        this.router.patch(`${this.path}/:id`, this.cancel);
     }
 
     /**
@@ -82,6 +84,48 @@ class SubscriptionController implements Controller {
                 });
             } else {
                 next(new CustomException('User Id not found'));
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * Activates the susbcription.
+     */
+    public activate = async(request: Request, response: Response, next: NextFunction) => {
+        const id = request.params.id;
+        try {
+            if (AppUtils.isNotEmpty(id)) {
+                const susbcription: Subscription = await this.susbcriptionService.activateSubscription(id);
+                return response.send({
+                    'status': 200,
+                    'subscription': susbcription,
+                    'message': 'Subscription activated'
+                });
+            } else {
+                next(new CustomException('Subscription Id not found'));
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * Cancels the subscription.
+     */
+    public cancel = async(request: Request, response: Response, next: NextFunction) => {
+        const id = request.params.id;
+        try {
+            if (AppUtils.isNotEmpty(id)) {
+                const susbcription: Subscription = await this.susbcriptionService.cancelSubscription(id);
+                return response.send({
+                    'status': 200,
+                    'subscription': susbcription,
+                    'message': 'Subscription cancelled'
+                });
+            } else {
+                next(new CustomException('Subscription Id not found'));
             }
         } catch (error) {
             next(error);

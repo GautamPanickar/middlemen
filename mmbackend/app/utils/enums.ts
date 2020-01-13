@@ -11,4 +11,10 @@ export namespace Enums {
         CANCELED,
         DISABLED
     }
+
+    export const enum Authorities {
+        ROLE_ADMIN = 50,
+        ROLE_USER = 100,
+        ROLE_SUBSCRIBER = 150
+    }
 }
