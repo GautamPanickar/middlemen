@@ -1,3 +1,6 @@
+import { CSGST_RATE, SGST_RATE, CESS_IN_PERC } from './appconstants';
+import { Enums } from './enums';
+
 export class AppUtils {
     /**
      * Retruns if the string value is empty or not.
@@ -59,5 +62,56 @@ export class AppUtils {
      */
     public static get uniqueCompanyId(): string {
         return 'COM-' + Math.random().toString(36).substr(2, 9) + '-' + Math.floor(1000 + Math.random() * 9000);
+    }
+
+    /**
+     * Checks if the country is India
+     * @param country 
+     */
+    public static isIndia(country: string): boolean  {
+        return AppUtils.areEqualIgnoringCase(country, 'India');
+    }
+
+    /**
+     * Checks if the state is Kerala
+     * @param state 
+     */
+    public static isKerala(state: string): boolean {
+        return AppUtils.areEqualIgnoringCase(state, 'Kerala');
+    }
+
+    /**
+     * Returns the tax inclusive amount.
+     * @param amountPaid 
+     * @param country 
+     * @param state 
+     */
+    public static getTaxInclusiveAmount(amountPaid: number, country: string, state: string): number {
+        let taxIncAmount: number = 0;
+        let amount = amountPaid;
+        if (AppUtils.isIndia(country)) {
+            const gst: number = CSGST_RATE + SGST_RATE;
+            const total: number =  (amount * gst) / 100;
+            taxIncAmount = taxIncAmount +  total;
+        }
+        if (AppUtils.isKerala(state)) {
+            const cess: number = CESS_IN_PERC;
+            const total: number = (amount * cess) / 100;
+            taxIncAmount =  taxIncAmount + total;
+        }
+        return Math.ceil(taxIncAmount + amount);
+    }
+
+    /**
+     * Returns the subscription plan price for different plans.
+     * @param plan 
+     */
+    public static getPlanPrice(plan: Enums.SubscriptionPlan): number {
+        switch (plan) {
+            case Enums.SubscriptionPlan.PLAN_1: return 0;
+            case Enums.SubscriptionPlan.PLAN_2: return 1500;
+            case Enums.SubscriptionPlan.PLAN_3: return 2000;
+            default: return 0;
+        }
     }
 }

@@ -22,8 +22,8 @@ class SubscriptionController implements Controller {
         this.router.post(`${this.path}`, this.save);
         this.router.get(`${this.path}/:id`, this.loadById);
         this.router.get(`${this.path}/user/:id`, this.loadByUser);
-        this.router.patch(`${this.path}/:id`, this.activate);
-        this.router.patch(`${this.path}/:id`, this.cancel);
+        this.router.patch(`${this.path}/:id/activate`, this.activate);
+        this.router.patch(`${this.path}/:id/cancel`, this.cancel);
     }
 
     /**

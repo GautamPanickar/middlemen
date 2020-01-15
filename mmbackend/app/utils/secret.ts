@@ -6,7 +6,9 @@ const secretValues: SecretKeys = {
     ENVIRONMENT: '',
     JWT_SECRET: '',
     MONGODB_URI: '',
-    PORT: 0
+    PORT: 0,
+    RPAY_KEY_ID: '',
+    RPAY_KEY_SECRET: ''
 };
 
 class Secret {    
@@ -29,6 +31,8 @@ class Secret {
         secretValues.JWT_SECRET = process.env['JWT_SECRET'];
         secretValues.MONGODB_URI = isProduction ? process.env['MONGODB_URI'] : process.env['MONGODB_URI_LOCAL'];
         secretValues.PORT = parseInt(process.env['PORT']);
+        secretValues.RPAY_KEY_ID = process.env['RPAY_KEY_ID'];
+        secretValues.RPAY_KEY_SECRET = process.env['RPAY_KEY_SECRET'];
 
         if (!secretValues.JWT_SECRET) {
             console.log('No JWT secret. Set JWT_SECRET environment variable.');
