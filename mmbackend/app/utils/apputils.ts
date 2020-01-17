@@ -88,7 +88,7 @@ export class AppUtils {
      */
     public static getTaxInclusiveAmount(amountPaid: number, country: string, state: string): number {
         let taxIncAmount: number = 0;
-        let amount = amountPaid;
+        const amount = amountPaid;
         if (AppUtils.isIndia(country)) {
             const gst: number = CSGST_RATE + SGST_RATE;
             const total: number =  (amount * gst) / 100;

@@ -16,7 +16,7 @@ class BCryptEncryptionService implements EncryptionService {
      * Gets the password salt.
      */
     public getPasswordSalt(): string {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     public arePasswordsEqual(password1: string, password2: string): Promise<boolean> {

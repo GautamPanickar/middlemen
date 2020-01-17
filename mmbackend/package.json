@@ -4,8 +4,8 @@
   "description": "Backend for Middlemen project",
   "main": "dist/server.js",
   "scripts": {
-    "test": "npm test",
-    "build": "tsc",
+    "test": "jest",
+    "build": "npm run tslint && tsc",
     "dev": "ts-node ./app/server.ts",
     "dev:debug": "node --inspect --require ts-node/register ./app/server.ts",
     "start": "nodemon ./dist/server.js",
@@ -31,7 +31,11 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/jest": "^24.9.0",
     "bcrypt": "^3.0.6",
-    "razorpay": "^2.0.5"
+    "jest": "^24.9.0",
+    "razorpay": "^2.0.5",
+    "ts-jest": "^24.3.0",
+    "typeorm": "^0.2.22"
   }
 }

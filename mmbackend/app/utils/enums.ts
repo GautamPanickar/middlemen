@@ -41,7 +41,7 @@ export namespace Enums {
     export const enum PaymentCheckoutMethod {
         CARD = 'card', 
         NET_BANKING = 'netbanking', 
-        WALLET ='wallet',
+        WALLET = 'wallet',
         EMI = 'emi', 
         UPI = 'upi'
     }

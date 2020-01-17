@@ -3,13 +3,13 @@ import SubscriptionDTO from 'dtos/subscription/susbcriptiondto';
 import AuthorityDTO from './authoritydto';
 
 export interface UserDTO {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   password: string;
-  activated: boolean;
-  activationKey: string;
-  resetKey: string;
+  activated?: boolean;
+  activationKey?: string;
+  resetKey?: string;
   contactAddress?: AddressDTO;
   billingAddress?: AddressDTO;
   newSubscription?: SubscriptionDTO;

@@ -37,11 +37,11 @@ class SubscriptionService {
     public async saveSubscription(dto: SubscriptionDTO, userId?: string) {
         if (AppUtils.isNotEmpty(dto.company)) {
             try {
-                if(AppUtils.isEmpty(dto.id) && dto.details) {
+                if (AppUtils.isEmpty(dto.id) && dto.details) {
                     // New Subscription is initially created with a pending status. 
                     // Only after the payment would the plan be activated.
                     dto.details.status = Enums.SubscriptionStatus.PENDING;
-                    dto.details.startedOn = null;
+                    dto.details.startedOn = undefined;
                     const newSubscription: Subscription = await this.subscription.create({...dto,
                         user_id: AppUtils.isNotEmpty(userId) ? userId : dto.user_id, 
                         activated: false});
@@ -52,7 +52,7 @@ class SubscriptionService {
                         const updatedSubscription: Subscription = await this.subscription.save({...dto});
                         return updatedSubscription;
                     } else {
-                        throw new CustomException("Could not find the subscription");
+                        throw new CustomException('Could not find the subscription');
                     }
                 }
             } catch (error) {
@@ -67,21 +67,21 @@ class SubscriptionService {
      */
     public async activateSubscription(id: string) {
         try {
-            let subscritpionToUpdate: Subscription = await this.findById(id);
+            const subscritpionToUpdate: Subscription = await this.findById(id);
             if (subscritpionToUpdate) {
                 subscritpionToUpdate.activated = true;
                 subscritpionToUpdate.companyId = AppUtils.uniqueCompanyId;
                 subscritpionToUpdate.details.status = Enums.SubscriptionStatus.ACTIVE;
-                let currentDate: Date = new Date();
-                let nextDate: Date = new Date();
+                const currentDate: Date = new Date();
+                const nextDate: Date = new Date();
                 nextDate.setFullYear(currentDate.getFullYear() + 1);
                 subscritpionToUpdate.details.startedOn = currentDate;
                 subscritpionToUpdate.details.nextBillingOn = nextDate;
-                subscritpionToUpdate.details.cancelledOn = null;
+                subscritpionToUpdate.details.cancelledOn = undefined;
                 const updatedSubscription: Subscription = await this.subscription.save({...subscritpionToUpdate});
                 return updatedSubscription;
             } else {
-                throw new CustomException("Could not find the subscription");
+                throw new CustomException('Could not find the subscription');
             }
         } catch (error) {
             throw new SomethingWrongException(error);
@@ -94,7 +94,7 @@ class SubscriptionService {
      */
     public async cancelSubscription(id: string) {
         try {
-            let subscritpionToUpdate: Subscription = await this.findById(id);
+            const subscritpionToUpdate: Subscription = await this.findById(id);
             if (subscritpionToUpdate) {
                 subscritpionToUpdate.activated = false;
                 subscritpionToUpdate.details.status = Enums.SubscriptionStatus.CANCELED;
@@ -102,7 +102,7 @@ class SubscriptionService {
                 const updatedSubscription: Subscription = await this.subscription.save({...subscritpionToUpdate});
                 return updatedSubscription;
             } else {
-                throw new CustomException("Could not find the subscription");
+                throw new CustomException('Could not find the subscription');
             }
         } catch (error) {
             throw new SomethingWrongException(error);

@@ -1,3 +1,5 @@
+import { Enums } from '../../utils/enums';
+
 interface PaymentBase {
     _id?: string;
     entity?: string;
@@ -5,8 +7,8 @@ interface PaymentBase {
     amountDue?: number;
     amountRefunded?: number;
     currency?: string;
-    status?: string;
-    refundStatus?: string;
+    status?: Enums.PaymentOrderStatus;
+    refundStatus?: Enums.PaymentRefundStatus;
     method?: string;
     attempts?: number;
     notes?: string[];

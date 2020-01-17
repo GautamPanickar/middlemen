@@ -2,7 +2,7 @@ import HttpException from '../base/httpexception';
 
 class SomethingWrongException extends HttpException {
   constructor(error: any) {
-    super(400, "Something went wrong", error);
+    super(400, 'Something went wrong', error);
   }
 }
 

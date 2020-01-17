@@ -11,7 +11,7 @@ const BillingPaymentSchema: Schema = new Schema({
     captured: Boolean,
     email: String,
     contact: String
-})
+});
 
 const BillingPaymentModel = model<BillingPayment & Document>('Document', BillingPaymentSchema);
 

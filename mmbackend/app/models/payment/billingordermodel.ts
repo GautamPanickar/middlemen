@@ -9,7 +9,7 @@ const BillingOrderSchema: Schema = new Schema({
     amount: Number,
     receipt: String,
     paymentCapture: Boolean
-})
+});
 
 const BillingOrderModel = model<BillingOrder & Document>('Document', BillingOrderSchema);
 

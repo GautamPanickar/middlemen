@@ -74,7 +74,10 @@ class App {
      * Initialize db connection
      */
     private connectToTheDatabase(): void {
-        Mongoose.connect(Secret.MONGODB_URI, {useNewUrlParser: true}).then( () => {
+        Mongoose.connect(Secret.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }).then( () => {
             Logger.info('MongoDB connection established successfully!');
         }).catch(err => {
             Logger.info('MongoDB connection error. Please make sure MongoDB is running. ' + err);
