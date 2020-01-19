@@ -6,7 +6,7 @@ export interface UserDTO {
   id?: string;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   activated?: boolean;
   activationKey?: string;
   resetKey?: string;
