@@ -58,7 +58,8 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-            'NODE_ENV': JSON.stringify('production')
+                'NODE_ENV': JSON.stringify('production'),
+                'BASE_URL': 'http://localhost:3000'
             }
         }),
         // This is necessary to let webpack know your index file.

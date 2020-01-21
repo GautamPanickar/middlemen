@@ -25,7 +25,7 @@ class UserController implements Controller {
     private initializeRoutes(): void {
         this.router.put(`${this.path}`, this.update);
         this.router.get(`${this.path}/:id`, this.loadById);
-        this.router.get(`/users`, this.loadAll);
+        this.router.get(`${this.path}/all`, this.loadAll);
     }
 
     /**
