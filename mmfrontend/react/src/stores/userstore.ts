@@ -1,15 +1,18 @@
 import { EventEmitter } from 'events';
-import Dispatcher from '../actiondispatchers/dispatcher';
+import Dispatcher from '../actioncreators/dispatcher';
 import ActionType from '../actions/typings/actiontypes';
 import { User } from '../types/user/user';
 import LoginAction from '../actions/loginaction';
+import ErrorData from '../dataservices/typings/errordata';
 
-class UserStore extends EventEmitter {
+export class UserStore extends EventEmitter {
     // Store variables
     private _loggedInUser: User;
+    private _loginError: ErrorData;
 
     // Events
     public static LOGIN_SUCCESSFUL: string = 'LoginSuccessful';
+    public static LOGIN_UNSUCCESSFUL: string = 'LoginUnsuccessful';
 
     constructor() {
         super();
@@ -24,7 +27,12 @@ class UserStore extends EventEmitter {
             case ActionType.LOGIN:
                 const loginAction = action as LoginAction;
                 this._loggedInUser = loginAction.user;
-                this.emit(UserStore.LOGIN_SUCCESSFUL);
+                this._loginError = loginAction.loginError;
+                if (this._loggedInUser && !this._loginError) {
+                    this.emit(UserStore.LOGIN_SUCCESSFUL);
+                } else {
+                    this.emit(UserStore.LOGIN_UNSUCCESSFUL);
+                }
                 break;
         }
     }
@@ -35,6 +43,14 @@ class UserStore extends EventEmitter {
     public get loggedInUser(): User {
         return this._loggedInUser;
     }
+
+    /**
+     * Returns the error on login if any
+     */
+    public get loginError(): ErrorData {
+        return this._loginError;
+    }
 }
 
-export default UserStore;
+let UserStoreInstance = new UserStore();
+export default UserStoreInstance;

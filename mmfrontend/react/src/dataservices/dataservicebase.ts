@@ -1,4 +1,5 @@
 import AJAXResponse from './typings/ajaxresponse';
+import AJAXError from './typings/ajaxerror';
 
 const axios = require('axios').default;
 
@@ -11,16 +12,19 @@ class DataServiceBase {
      * @param params 
      */
     public makeAJAXPostRequest(url: string, data: any, params?: string[]): Promise<any> {
-        axios({
-            method: 'post',
-            url: url,
-            data: data
-        }).then((response: AJAXResponse) => {
-            return Promise.resolve(response.data);
-        }, (error: Error) => {
-            return Promise.reject(error);
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'post',
+                url: url,
+                data: data
+            })
+            .then((response: AJAXResponse) => {
+                resolve(response);
+            })
+            .catch((error: any) => {
+                reject(error.response);
+            });
         });
-        return null;
     }
 
     /**
@@ -30,16 +34,19 @@ class DataServiceBase {
      * @param params 
      */
     public makeAJAXPutRequest(url: string, data: any, params?: string[]): Promise<any> {
-        axios({
-            method: 'put',
-            url: url,
-            data: data
-        }).then((response: AJAXResponse) => {
-            return Promise.resolve(response.data);
-        }, (error: Error) => {
-            return Promise.reject(error);
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'put',
+                url: url,
+                data: data
+            })
+            .then((response: AJAXResponse) => {
+                resolve(response);
+            })
+            .catch((error: any) => {
+                reject(error);
+            });
         });
-        return null;
     }
 
     /**
@@ -48,15 +55,18 @@ class DataServiceBase {
      * @param params 
      */
     public makeAJAXPatchRequest(url: string, params?: string[]): Promise<any> {
-        axios({
-            method: 'patch',
-            url: url
-        }).then((response: AJAXResponse) => {
-            return Promise.resolve(response.data);
-        }, (error: Error) => {
-            return Promise.reject(error);
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'patch',
+                url: url
+            })
+            .then((response: AJAXResponse) => {
+                resolve(response);
+            })
+            .catch((error: any) => {
+                reject(error);
+            });
         });
-        return null;
     }
 
     /**
@@ -65,15 +75,18 @@ class DataServiceBase {
      * @param params 
      */
     public makeAJAXGetRequest(url: string, params?: string[]): Promise<any> {
-        axios({
-            method: 'get',
-            url: url
-        }).then((response: AJAXResponse) => {
-            return Promise.resolve(response.data);
-        }, (error: Error) => {
-            return Promise.reject(error);
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'get',
+                url: url
+            })
+            .then((response: AJAXResponse) => {
+                resolve(response);
+            })
+            .catch((error: any) => {
+                reject(error);
+            });
         });
-        return null;
     }
 }
 

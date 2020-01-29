@@ -1,15 +1,19 @@
-import Dispatcher from '../actiondispatchers/dispatcher';
+import Dispatcher from '../actioncreators/dispatcher';
 import ActionType from './typings/actiontypes';
 import { User } from '../types/user/user';
+import ErrorData from '../dataservices/typings/errordata';
 
 class LoginAction {
     private _user: User;
+    private _loginError: ErrorData;
 
-    constructor(user: User) {
+    constructor(user: User, error?: ErrorData) {
         this._user = user;
+        this._loginError = error;
         Dispatcher.dispatch( {
             actionType: ActionType.LOGIN,
-            user: this.user
+            user: this.user,
+            loginError: this.loginError
         });
     }
 
@@ -18,6 +22,13 @@ class LoginAction {
      */
     public get user(): User {
         return this._user;
+    }
+
+    /**
+     * Returns the error if any.
+     */
+    public get loginError(): ErrorData {
+        return this._loginError;
     }
 }
 

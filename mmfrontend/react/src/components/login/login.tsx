@@ -1,4 +1,12 @@
 import * as React from 'react';
+import { AppUtils } from '../../utilities/apputils';
+import { AlertBox } from '../common/alertbox';
+import UserActionCreator from '../../actioncreators/useractioncreator';
+import UserHelper from '../../helpers/userhelper';
+import UserStoreInstance from '../../stores/userstore';
+import { UserStore } from '../../stores/userstore';
+import GenericActionCreator from '../../actioncreators/genericactioncreator';
+import GenericStoreInstance from '../../stores/genericstore';
 
 interface Props {
 
@@ -7,6 +15,7 @@ interface Props {
 interface State {
     email?: string;
     password?: string;
+    formAlert?: string;
 }
 
 export class Login extends React.Component<Props, State> {
@@ -14,7 +23,8 @@ export class Login extends React.Component<Props, State> {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            formAlert: ''
         };
 
         // Bindings
@@ -23,6 +33,9 @@ export class Login extends React.Component<Props, State> {
         this.login = this.login.bind(this);
         this.requestResetPassword = this.requestResetPassword.bind(this);
         this.register = this.register.bind(this);
+        this.onAlertHide = this.onAlertHide.bind(this);
+        this.onSuccessfulLogin = this.onSuccessfulLogin.bind(this);
+        this.onFailedLogin = this.onFailedLogin.bind(this);
     }
 
     public render() {
@@ -31,7 +44,12 @@ export class Login extends React.Component<Props, State> {
                 <div className='col-6 text-center'>
                     <h1 className="display-3">MiddleMen</h1>
                     <h1 className='lead display-5'>Connecting the missing dots..</h1>
-                    <form className='form text-left'>
+                    <AlertBox id='loginFormAlertBox'
+                        key='key-loginFormAlertBox'
+                        message={this.state.formAlert}
+                        type='Danger'
+                        onHideCallBack={this.onAlertHide}/>
+                    <form className='form text-left mt-4'>
                         <div className='form-group'>
                             <label className='username-label' htmlFor='email'>Email</label>
                             <input type='text' className='form-control borderless-text-field' 
@@ -49,15 +67,15 @@ export class Login extends React.Component<Props, State> {
                                 onChange={this.handlePasswordChange}/>
                         </div>
                         <div className='text-center mb-2'>
-                            <a className='btn btn-success' href='javascript:void(0);' 
+                            <a className='btn btn-dark' href='javascript:void(0);' 
                                 onClick={this.login}>Sign in</a>
                         </div>
                     </form>
-                    <div className='alert alert-warning text-left'>
+                    <div className='alert alert-secondary text-left'>
                         <a className='alert-link' href='javascript:void(0);' 
                             onClick={this.requestResetPassword}>Did you forget your password?</a>
                     </div>
-                    <div className='alert alert-warning text-left'>
+                    <div className='alert alert-secondary text-left'>
                         <span>You don't have an account yet?</span>
                         <a className='alert-link' href='javascript:void(0);' 
                             onClick={this.register}>&nbsp;Register a new account</a>
@@ -65,6 +83,16 @@ export class Login extends React.Component<Props, State> {
                 </div>
             </div>
         );
+    }
+
+    public componentDidMount() {
+        UserStoreInstance.addListener(UserStore.LOGIN_SUCCESSFUL, this.onSuccessfulLogin);
+        UserStoreInstance.addListener(UserStore.LOGIN_UNSUCCESSFUL, this.onFailedLogin);
+    }
+
+    public componentWillUnmount() {
+        UserStoreInstance.removeListener(UserStore.LOGIN_SUCCESSFUL, this.onSuccessfulLogin);
+        UserStoreInstance.removeListener(UserStore.LOGIN_UNSUCCESSFUL, this.onFailedLogin);
     }
 
     /**
@@ -87,9 +115,24 @@ export class Login extends React.Component<Props, State> {
         });
     }
 
+    /**
+     * On clicking the login button.
+     */
     private login(): void {
-        console.log(this.state.email);
-        console.log(this.state.password);
+        if (AppUtils.isNotEmpty(this.state.email) && AppUtils.isNotEmpty(this.state.password)) {
+            if (UserHelper.isValidEmail(this.state.email)) {
+                GenericActionCreator.toggleOverlay(true, true);
+                UserActionCreator.login(this.state.email, this.state.password);               
+            } else {
+                this.setState({
+                    formAlert: 'Entered email id is invalid!'
+                });
+            }
+        } else {
+            this.setState({
+                formAlert: 'Email or password cannot be empty!'
+            });
+        }
     }
 
     private requestResetPassword(): void {
@@ -98,5 +141,33 @@ export class Login extends React.Component<Props, State> {
 
     private register(): void {
 
+    }
+
+    private onAlertHide = () => {
+        this.setState({
+            formAlert: ''
+        });
+    }
+
+    private onSuccessfulLogin = () => {
+        this.setState({
+            formAlert: ''
+        });
+        if (GenericStoreInstance.hasOverlay) {
+            setTimeout(() => {
+                GenericActionCreator.toggleOverlay(false);
+            }, 1000);
+        }
+    }
+
+    private onFailedLogin = () => {
+        this.setState({
+            formAlert: UserStoreInstance.loginError.message
+        });
+        if (GenericStoreInstance.hasOverlay) {
+            setTimeout(() => {
+                GenericActionCreator.toggleOverlay(false);
+            }, 1000);
+        }
     }
 }

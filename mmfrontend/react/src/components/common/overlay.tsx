@@ -1,4 +1,5 @@
 import * as React from 'react';
+import GenericStoreInstance, { GenericStore } from '../../stores/genericstore';
 
 interface Props {
 
@@ -19,6 +20,7 @@ export class Overlay extends React.Component<Props, State> {
         }
 
         // Bindings
+        this.onShowOrHideOverlay = this.onShowOrHideOverlay.bind(this);
     }
 
     public render() {
@@ -29,4 +31,17 @@ export class Overlay extends React.Component<Props, State> {
         );
     }
 
+    public componentDidMount() {
+        GenericStoreInstance.addListener(GenericStore.SHOW_HIDE_OVERLAY, this.onShowOrHideOverlay);
+    }
+
+    public componentWillUnmount() {
+        GenericStoreInstance.removeListener(GenericStore.SHOW_HIDE_OVERLAY, this.onShowOrHideOverlay);
+    }
+
+    private onShowOrHideOverlay = () => {
+        this.setState({
+            display: GenericStoreInstance.hasOverlay
+        });
+    }
 }
