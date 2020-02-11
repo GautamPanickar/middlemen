@@ -28,6 +28,24 @@ class UserDataService extends DataServiceBase {
             });
         });
     }
+
+    /**
+     * Data service for registering a new user/susbcriber.
+     * @param user 
+     */
+    public register(user: User): Promise<any> {
+        const url = AppURL.BASE_URL +  AppURL.AUTH_API_URL + '/register';
+        return new Promise((resolve, reject) => {
+            this.makeAJAXPostRequest(url, user)
+                .then((response: AJAXResponse) => {
+                    // May have to cast the json to correct object.
+                    resolve(response.data);
+                })
+                .catch((error: AJAXError) => {
+                    reject(error);
+                });
+        });
+    }
 }
 
 export default new UserDataService();

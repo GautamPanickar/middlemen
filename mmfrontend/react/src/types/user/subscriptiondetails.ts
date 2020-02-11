@@ -3,7 +3,7 @@ interface SubscriptionDetails {
     status: number;
     cancelledOn?: string;
     nextBillingOn?: string;
-    startedOn: string;
+    startedOn?: string;
     previousPlan?: number;
 }
 

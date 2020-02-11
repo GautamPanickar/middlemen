@@ -7,6 +7,7 @@ import UserStoreInstance from '../../stores/userstore';
 import { UserStore } from '../../stores/userstore';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import GenericStoreInstance from '../../stores/genericstore';
+import { GenericModal } from '../common/genericmodal';
 
 interface Props {
 
@@ -40,6 +41,7 @@ export class Login extends React.Component<Props, State> {
 
     public render() {
         return (
+            <>
             <div className='row justify-content-center mb-5 mt-5'>
                 <div className='col-6 text-center'>
                     <h1 className="display-3">MiddleMen</h1>
@@ -82,6 +84,8 @@ export class Login extends React.Component<Props, State> {
                     </div>
                 </div>
             </div>
+            <GenericModal id='loginFormLoaderModal' key='key-loginFormLoaderModal' />
+            </>
         );
     }
 
@@ -139,8 +143,11 @@ export class Login extends React.Component<Props, State> {
 
     }
 
+    /**
+     * On clicking the register link
+     */
     private register(): void {
-
+        UserActionCreator.loadRegistrationSection();
     }
 
     private onAlertHide = () => {
@@ -149,6 +156,9 @@ export class Login extends React.Component<Props, State> {
         });
     }
 
+    /**
+     * After successful login or authentication
+     */
     private onSuccessfulLogin = () => {
         this.setState({
             formAlert: ''
@@ -160,6 +170,9 @@ export class Login extends React.Component<Props, State> {
         }
     }
 
+    /**
+     * On authentication failure.
+     */
     private onFailedLogin = () => {
         this.setState({
             formAlert: UserStoreInstance.loginError.message

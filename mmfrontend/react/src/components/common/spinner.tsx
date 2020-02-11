@@ -12,6 +12,10 @@ const spinnerStyle: React.CSSProperties = {
     height: '2.5rem'
 };
 
+const spinnerHolderStyle: React.CSSProperties = {
+    width: '100%'
+};
+
 /**
  * The Spinner is a stateless component.
  * @param props
@@ -19,7 +23,7 @@ const spinnerStyle: React.CSSProperties = {
 export const Spinner = (props: Props) => {
     let spinnerClass: string = 'spinner-grow ' + getColor();
     return (
-        <div className='spinner-holder mt-3 mb-3 d-flex justify-content-center'>
+        <div className='spinner-holder mt-3 mb-3 d-flex justify-content-center text-center' style={spinnerHolderStyle}>
             {spinners()}
         </div>
     );

@@ -4,6 +4,7 @@ import ActionType from '../actions/typings/actiontypes';
 import { User } from '../types/user/user';
 import LoginAction from '../actions/loginaction';
 import ErrorData from '../dataservices/typings/errordata';
+import UserRegistrationAction from '../actions/userregistrationaction';
 
 export class UserStore extends EventEmitter {
     // Store variables
@@ -13,6 +14,7 @@ export class UserStore extends EventEmitter {
     // Events
     public static LOGIN_SUCCESSFUL: string = 'LoginSuccessful';
     public static LOGIN_UNSUCCESSFUL: string = 'LoginUnsuccessful';
+    public static USER_REGISTRATION_SUCCESSFUL_EVENT: string = 'UserRegistrationSuccessfulEvent';
 
     constructor() {
         super();
@@ -33,6 +35,11 @@ export class UserStore extends EventEmitter {
                 } else {
                     this.emit(UserStore.LOGIN_UNSUCCESSFUL);
                 }
+                break;
+            case ActionType.USER_REGISTERED_ACTION:
+                const regAction = action as UserRegistrationAction;
+                this._loggedInUser = regAction.user;
+                this.emit(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT);
                 break;
         }
     }
