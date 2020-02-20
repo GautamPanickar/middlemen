@@ -4,6 +4,7 @@ import { User } from '../types/user/user';
 import AJAXError from '../dataservices/typings/ajaxerror';
 import LoadRegistrationAction from '../actions/loadregistrationaction';
 import UserRegistrationAction from '../actions/userregistrationaction';
+import AlertAction from '../actions/alertaction';
 
 class UserActionCreator {
 
@@ -17,7 +18,8 @@ class UserActionCreator {
             .then ((user: User) =>  {
                 new LoginAction(user);
             }).catch((error: AJAXError) => {
-                new LoginAction(undefined, error.data);
+                new LoginAction(undefined);
+                new AlertAction(error.data.message);
             });
     }
 
@@ -37,7 +39,7 @@ class UserActionCreator {
             .then ((user: User) => {
                 new UserRegistrationAction(user);
             }).catch((error: AJAXError) => {
-                console.log(error);
+                new AlertAction(error.data.message);
             });
     }
 }

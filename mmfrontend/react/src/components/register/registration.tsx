@@ -11,13 +11,14 @@ import { PlanDisplayInfo } from '../../types/others/plandisplayinfo';
 import { User } from '../../types/user/user';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
+import UserStoreInstance, { UserStore } from '../../stores/userstore';
+import GenericStoreInstance from '../../stores/genericstore';
 
 interface Props {
 
 }
 
 interface State {
-    formAlert: string;
     nameError: string;
     companyError: string;
     emailError: string;
@@ -37,7 +38,6 @@ export class Registration extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            formAlert: '',
             nameError: '',
             companyError: '',
             emailError: '',
@@ -59,6 +59,8 @@ export class Registration extends React.Component<Props, State> {
         this.onPlanSelectorClick = this.onPlanSelectorClick.bind(this);
         this.onPlanChange = this.onPlanChange.bind(this);
         this.onPurchasingPlan = this.onPurchasingPlan.bind(this);
+        this.onSuccessfulRegistration = this.onSuccessfulRegistration.bind(this);
+        this.onUnSuccessfulRegistration = this.onUnSuccessfulRegistration.bind(this);
     }
 
     public render() {
@@ -76,8 +78,6 @@ export class Registration extends React.Component<Props, State> {
                                 <div className='mt-3 col-md-9'>
                                     <AlertBox id='registrationFormAlertBox'
                                         key='key-registrationFormAlertBox'
-                                        message={this.state.formAlert}
-                                        type='Danger'
                                         onHideCallBack={this.onAlertHide}/>
                                     <form className='form'>
                                         <TextField id='nameField' key='key-nameField'
@@ -141,10 +141,18 @@ export class Registration extends React.Component<Props, State> {
         );
     }
 
+    public componentDidMount() {
+        UserStoreInstance.addListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onSuccessfulRegistration);
+        UserStoreInstance.addListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onUnSuccessfulRegistration);
+    }
+
+    public componentWillUnmount() {
+        UserStoreInstance.removeListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onSuccessfulRegistration);
+        UserStoreInstance.removeListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onUnSuccessfulRegistration);
+    }
+
     private onAlertHide(): void {
-        this.setState({
-            formAlert: ''
-        });
+        // Do something if necessary.
     }
 
     private handleNameChange(value: string): void {
@@ -310,5 +318,17 @@ export class Registration extends React.Component<Props, State> {
             formDisplay: true,
             plan: plan
         });
+    }
+
+    private onSuccessfulRegistration(): void {
+        if (GenericStoreInstance.hasOverlay) {
+            GenericActionCreator.toggleOverlay(false);
+        }
+    }
+
+    private onUnSuccessfulRegistration(): void {
+        if (GenericStoreInstance.hasOverlay) {
+            GenericActionCreator.toggleOverlay(false);
+        }
     }
 }

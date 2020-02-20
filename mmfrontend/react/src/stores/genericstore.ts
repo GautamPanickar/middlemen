@@ -3,15 +3,19 @@ import Dispatcher from '../actioncreators/dispatcher';
 import ActionType from '../actions/typings/actiontypes';
 import OverlayAction from '../actions/overlayaction';
 import LoadRegistrationAction from '../actions/loadregistrationaction';
+import AlertAction from '../actions/alertaction';
 
 export class GenericStore extends EventEmitter {
     // Store variables
     private _hasOverlay: boolean;
     private _hasSpinner: boolean;
+    private _alertMessage: string;
+    private _alertType: string;
 
     // Events
     public static SHOW_HIDE_OVERLAY: string = 'ShowHideOverlay';
     public static LOAD_REGISTRATION_EVENT: string = 'LoadRegistrationEvent';
+    public static SHOW_HIDE_ALERT_EVENT: string = 'ShowHideAlertEvent';
 
     constructor () {
         super();
@@ -31,6 +35,12 @@ export class GenericStore extends EventEmitter {
                 const loadRegistrationAction = action as LoadRegistrationAction;
                 this.emit(GenericStore.LOAD_REGISTRATION_EVENT);
                 break;
+            case ActionType.ALERT_ACTION:
+                const alertAction = action as AlertAction;
+                this._alertMessage = alertAction.message;
+                this._alertType = alertAction.type;
+                this.emit(GenericStore.SHOW_HIDE_ALERT_EVENT);
+                break;
         }
     }
 
@@ -46,6 +56,20 @@ export class GenericStore extends EventEmitter {
      */
     public get hasSpinner(): boolean {
         return this._hasSpinner;
+    }
+
+    /**
+     * Returns the active alert message.
+     */
+    public get alertMessage(): string {
+        return this._alertMessage;
+    }
+
+    /**
+     * Returns the active alert type;
+     */
+    public get alertType(): string {
+        return this._alertType;
     }
 }
 

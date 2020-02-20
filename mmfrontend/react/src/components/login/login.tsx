@@ -16,7 +16,6 @@ interface Props {
 interface State {
     email?: string;
     password?: string;
-    formAlert?: string;
 }
 
 export class Login extends React.Component<Props, State> {
@@ -24,8 +23,7 @@ export class Login extends React.Component<Props, State> {
         super(props);
         this.state = {
             email: '',
-            password: '',
-            formAlert: ''
+            password: ''
         };
 
         // Bindings
@@ -48,8 +46,6 @@ export class Login extends React.Component<Props, State> {
                     <h1 className='lead display-5'>Connecting the missing dots..</h1>
                     <AlertBox id='loginFormAlertBox'
                         key='key-loginFormAlertBox'
-                        message={this.state.formAlert}
-                        type='Danger'
                         onHideCallBack={this.onAlertHide}/>
                     <form className='form text-left mt-4'>
                         <div className='form-group'>
@@ -128,14 +124,10 @@ export class Login extends React.Component<Props, State> {
                 GenericActionCreator.toggleOverlay(true, true);
                 UserActionCreator.login(this.state.email, this.state.password);               
             } else {
-                this.setState({
-                    formAlert: 'Entered email id is invalid!'
-                });
+                GenericActionCreator.showFormAlert('Entered email id is invalid!');
             }
         } else {
-            this.setState({
-                formAlert: 'Email or password cannot be empty!'
-            });
+            GenericActionCreator.showFormAlert('Email or password cannot be empty!');
         }
     }
 
@@ -151,22 +143,15 @@ export class Login extends React.Component<Props, State> {
     }
 
     private onAlertHide = () => {
-        this.setState({
-            formAlert: ''
-        });
+        // Do something if needed.
     }
 
     /**
      * After successful login or authentication
      */
     private onSuccessfulLogin = () => {
-        this.setState({
-            formAlert: ''
-        });
         if (GenericStoreInstance.hasOverlay) {
-            setTimeout(() => {
-                GenericActionCreator.toggleOverlay(false);
-            }, 1000);
+            GenericActionCreator.toggleOverlay(false);
         }
     }
 
@@ -174,13 +159,8 @@ export class Login extends React.Component<Props, State> {
      * On authentication failure.
      */
     private onFailedLogin = () => {
-        this.setState({
-            formAlert: UserStoreInstance.loginError.message
-        });
         if (GenericStoreInstance.hasOverlay) {
-            setTimeout(() => {
-                GenericActionCreator.toggleOverlay(false);
-            }, 1000);
+            GenericActionCreator.toggleOverlay(false);
         }
     }
 }
