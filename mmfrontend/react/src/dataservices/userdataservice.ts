@@ -3,6 +3,8 @@ import { User } from '../types/user/user';
 import AppURL from '../utilities/urls';
 import AJAXResponse from './typings/ajaxresponse';
 import AJAXError from './typings/ajaxerror';
+import StorageService from './storageservice';
+import { AppUtils } from '../utilities/apputils';
 
 class UserDataService extends DataServiceBase {
 
@@ -20,8 +22,13 @@ class UserDataService extends DataServiceBase {
         return new Promise((resolve, reject) => {
             this.makeAJAXPostRequest(url, user)
             .then((response: AJAXResponse) => {
+                // Store the JWT token into local storage
+                const jwt = response.data.token;
+                if (jwt && AppUtils.isNotEmpty(jwt.token)) {
+                    StorageService.storeItem('authenticationtoken', jwt.token);
+                }
                 // May have to cast the json to correct object.
-                resolve(response.data);
+                resolve(response.data.user);
             })
             .catch((error: AJAXError) => {
                 reject(error);
@@ -39,11 +46,29 @@ class UserDataService extends DataServiceBase {
             this.makeAJAXPostRequest(url, user)
                 .then((response: AJAXResponse) => {
                     // May have to cast the json to correct object.
-                    resolve(response.data);
+                    resolve(response.data.user);
                 })
                 .catch((error: AJAXError) => {
                     reject(error);
                 });
+        });
+    }
+
+    /**
+     * Data service for loading the suer details by user id.
+     * @param userId 
+     */
+    public loaduserById(userId: string): Promise<any> {
+        const url = AppURL.BASE_URL + AppURL.USER_API_URL + '/' + userId;
+        return new Promise((resolve, reject) => {
+            this.makeAJAXGetRequest(url)
+            .then((response: AJAXResponse) => {
+                // May have to cast the json to correct object.
+                resolve(response.data.user);
+            })
+            .catch((error: AJAXError) => {
+                reject(error);
+            });
         });
     }
 }

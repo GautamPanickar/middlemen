@@ -1,5 +1,7 @@
 import { Enums } from '../utilities/enums';
 import { PlanDisplayInfo } from '../types/others/plandisplayinfo';
+import SubscriptionDetails from '../types/user/subscriptiondetails';
+import { AppUtils } from '../utilities/apputils';
 
 export class SubscriptionHelper {
 
@@ -39,5 +41,23 @@ export class SubscriptionHelper {
                     'Duis aute irure dolor'
                 ]};
         }
+    }
+
+    /**
+     * Checks if the subscription has expired.
+     * @param subscription 
+     */
+    public static hasSubscriptionExpired(subscription: SubscriptionDetails): boolean {
+        const nextBillingDate: Date = new Date(subscription.nextBillingOn);
+        return AppUtils.isDateAfter(new Date(), nextBillingDate) && subscription.status.toString() !== 'CANCELED';
+    }
+
+    /**
+     * Checks if the subscription is expiring today.
+     * @param {SubscriptionDetails} subscription
+     */
+    public static isSubscriptionExpiringToday(subscription: SubscriptionDetails): boolean {
+        const nextBillingDate: Date = new Date(subscription.nextBillingOn);
+        return AppUtils.areSameDates(new Date(), nextBillingDate) && subscription.status.toString() !== 'CANCELED';
     }
 }

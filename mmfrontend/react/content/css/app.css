@@ -18,7 +18,7 @@
     box-shadow: 0 4px 3px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-box, .price-box:hover {
+.dashboard-box:hover, .price-box:hover {
     transition: all 0.2s ease-in-out;
     transform: scale(1);
     box-shadow: 0 6px 5px rgba(0, 0, 0, 0.5);
@@ -70,4 +70,13 @@
 .borderless-text-field {
     border: none;
     border-bottom: 1px solid #ced4da;
+}
+
+a.dashboard-link {
+    color: black;
+    font-weight: 500;
+}
+
+.dropdown-menu {
+    display: block;
 }

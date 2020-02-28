@@ -5,6 +5,10 @@ import AJAXError from '../dataservices/typings/ajaxerror';
 import LoadRegistrationAction from '../actions/loadregistrationaction';
 import UserRegistrationAction from '../actions/userregistrationaction';
 import AlertAction from '../actions/alertaction';
+import LogoutAction from '../actions/logoutaction';
+import LoadUserAction from '../actions/loaduseraction';
+import { AppUtils } from '../utilities/apputils';
+import StorageService from '../dataservices/storageservice';
 
 class UserActionCreator {
 
@@ -36,11 +40,37 @@ class UserActionCreator {
      */
     public static register(user: User): void {
         UserDataService.register(user)
-            .then ((user: User) => {
+            .then((user: User) => {
                 new UserRegistrationAction(user);
             }).catch((error: AJAXError) => {
                 new AlertAction(error.data.message);
             });
+    }
+
+    /**
+     * Action to logout the user.
+     */
+    public static logout(): void {
+        new LogoutAction();
+    }
+
+    /**
+     * Loads the details of the suer with the given user id.
+     * If user id is not provided then stored userid is fetched from local/session storage.
+     * @param userId 
+     */
+    public static loadUserDetails(userId?: string): void {
+        if (AppUtils.isEmpty(userId)) {
+            userId = StorageService.retrieveItem('loggedinuserid');
+        }
+        if (AppUtils.isNotEmpty(userId)) {
+            UserDataService.loaduserById(userId)
+                .then((user: User) => {
+                    new LoadUserAction(user);
+                }).catch((error: AJAXError) => {
+                    // handle error via popup
+                });
+        }
     }
 }
 
