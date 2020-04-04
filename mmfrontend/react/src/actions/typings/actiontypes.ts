@@ -7,7 +7,8 @@ const ActionType = {
     USER_REGISTERED_ACTION: 'UserRegisteredAction',
     ALERT_ACTION: 'AlertAction',
     LOAD_SUBSCRIPTION_ACTION: 'LoadSubscriptionAction',
-    LOAD_USER_ACTION: 'LoadUserAction'
+    LOAD_USER_ACTION: 'LoadUserAction',
+    UPDATE_BREADCRUMB_ACTION: 'UpdateBreadcrumbAction'
 };
 
 export default ActionType;

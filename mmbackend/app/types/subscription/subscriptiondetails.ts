@@ -7,6 +7,7 @@ interface SubscriptionDetails {
     nextBillingOn?: Date;
     startedOn: Date;
     previousPlan?: number;
+    price?; number;
 }
 
 export default SubscriptionDetails;

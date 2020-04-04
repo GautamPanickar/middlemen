@@ -1,7 +1,10 @@
 import * as React from 'react'
 
 interface Props extends PropsBase{
-
+    onViewCallback: Function;
+    onChangeCallback: Function;
+    onBuyAddonsCallback: Function;
+    onCancelCallback: Function;
 }
 
 /**
@@ -14,7 +17,7 @@ export const PricingDashItem = (props: Props) => {
             <div className='dash-box-heading mt-1'>
                 <h4 className='font-weight-light'>Plans & Pricing</h4>
                 <hr />
-                <h6 className='font-weight-lighter'>Details of different subscription plans offered by HQPulse.</h6>
+                <h6 className='font-weight-lighter'>Details of different subscription plans offered.</h6>
                 <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={view}>* View current plan</a></h6>
                 <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={change}>* Change plan</a></h6>
                 <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={addons}>* Buy add-ons</a></h6>
@@ -29,19 +32,19 @@ export const PricingDashItem = (props: Props) => {
     );
 
     function view() {
-
+        props.onViewCallback();
     }
 
     function change() {
-
+        props.onChangeCallback();
     }
 
     function addons() {
-
+        props.onBuyAddonsCallback();
     }
 
     function cancel() {
-
+        props.onCancelCallback();
     }
 
     function showCancel() {

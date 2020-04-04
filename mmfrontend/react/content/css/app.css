@@ -80,3 +80,7 @@ a.dashboard-link {
 .dropdown-menu {
     display: block;
 }
+
+.breadcrumb {
+    background-color: white;
+}

@@ -4,6 +4,8 @@ import ActionType from '../actions/typings/actiontypes';
 import OverlayAction from '../actions/overlayaction';
 import LoadRegistrationAction from '../actions/loadregistrationaction';
 import AlertAction from '../actions/alertaction';
+import BreadcrumbItem from '../types/others/breadcrumbitem';
+import UpdateBreadcrumbAction from '../actions/updatebreadcrumbaction';
 
 export class GenericStore extends EventEmitter {
     // Store variables
@@ -11,14 +13,19 @@ export class GenericStore extends EventEmitter {
     private _hasSpinner: boolean;
     private _alertMessage: string;
     private _alertType: string;
+    private _breadcrumbs: BreadcrumbItem[];
 
     // Events
     public static SHOW_HIDE_OVERLAY: string = 'ShowHideOverlay';
     public static LOAD_REGISTRATION_EVENT: string = 'LoadRegistrationEvent';
     public static SHOW_HIDE_ALERT_EVENT: string = 'ShowHideAlertEvent';
+    public static BREADCRUMBS_UPDATED_EVENT: string = 'BreadcrumbsUpdatedEvent';
 
     constructor () {
         super();
+        this._breadcrumbs = [];
+        this._breadcrumbs.push(this.defaultBreadcrumb);
+
         Dispatcher.register(this.dispatcherCallback.bind(this));
     }
 
@@ -41,6 +48,21 @@ export class GenericStore extends EventEmitter {
                 this._alertType = alertAction.type;
                 this.emit(GenericStore.SHOW_HIDE_ALERT_EVENT);
                 break;
+            case ActionType.UPDATE_BREADCRUMB_ACTION:
+                const breadcrumbAction = action as UpdateBreadcrumbAction;
+                if (breadcrumbAction.action === 'INIT') {
+                    this._breadcrumbs = [];
+                } else if (breadcrumbAction.action === 'PUSH') {
+                    this._breadcrumbs.push(breadcrumbAction.item);
+                } else if (breadcrumbAction.action === 'POP' && breadcrumbAction.item === null) {
+                    this._breadcrumbs.pop();
+                } else if (breadcrumbAction.action === 'POP' && breadcrumbAction.item !== null) {
+                    this._breadcrumbs = this._breadcrumbs.filter((item: BreadcrumbItem) => {
+                        item.ukey !== breadcrumbAction.item.ukey
+                    });
+                }
+                this.emit(GenericStore.BREADCRUMBS_UPDATED_EVENT);
+                break; 
         }
     }
 
@@ -70,6 +92,26 @@ export class GenericStore extends EventEmitter {
      */
     public get alertType(): string {
         return this._alertType;
+    }
+
+    /**
+     * Returns the default home breadcrumb.
+     */
+    public get defaultBreadcrumb(): BreadcrumbItem {
+        const item: BreadcrumbItem = {
+            ukey: 'homeKEY-000',
+            name: 'Home',
+            parent: null,
+            active: true
+        };
+        return item;
+    }
+
+    /**
+     * Returns the array of breadcrumbs.
+     */
+    public get breadcrumbs(): BreadcrumbItem[] {
+        return this._breadcrumbs;
     }
 }
 

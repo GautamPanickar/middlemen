@@ -1,5 +1,7 @@
 import OverlayAction from '../actions/overlayaction';
 import AlertAction from '../actions/alertaction';
+import BreadcrumbItem from '../types/others/breadcrumbitem';
+import UpdateBreadcrumbAction, { BreadcrumbAction } from '../actions/updatebreadcrumbaction';
 
 class GenericActionCreator {
 
@@ -24,6 +26,15 @@ class GenericActionCreator {
      */
     public static showFormAlert(message: string): void {
         new AlertAction(message);
+    }
+
+    /**
+     * Updates the breadcrumb.
+     * @param item 
+     * @param action 
+     */
+    public static updateBreadCrumb(item: BreadcrumbItem, action: BreadcrumbAction): void {
+        new UpdateBreadcrumbAction(item, action);
     }
 }
 

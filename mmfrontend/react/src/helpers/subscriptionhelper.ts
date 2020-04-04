@@ -2,6 +2,7 @@ import { Enums } from '../utilities/enums';
 import { PlanDisplayInfo } from '../types/others/plandisplayinfo';
 import SubscriptionDetails from '../types/user/subscriptiondetails';
 import { AppUtils } from '../utilities/apputils';
+import { Address } from '../types/user/address';
 
 export class SubscriptionHelper {
 
@@ -59,5 +60,43 @@ export class SubscriptionHelper {
     public static isSubscriptionExpiringToday(subscription: SubscriptionDetails): boolean {
         const nextBillingDate: Date = new Date(subscription.nextBillingOn);
         return AppUtils.areSameDates(new Date(), nextBillingDate) && subscription.status.toString() !== 'CANCELED';
+    }
+
+    /**
+     * Returns the subscriber address HTML as a string;
+     * Note: This method could only be used for injecting as 'innerHTML'
+     * @param {Address} address
+     * @returns {string}
+     */
+    public static getSubscriberAddress(address: Address): string {
+        return (
+            '<p class="mb-0">' +
+            address.line1 +
+            ', ' +
+            address.city +
+            ', ' +
+            'PIN: ' +
+            address.zipCode +
+            ', ' +
+            address.state +
+            ', ' +
+            address.country +
+            '</p>' +
+            '<p class="m-0 font-weight-light"><small><i class="fas fa-envelope"></i> ' +
+            address.email +
+            '</small></p> '
+        );
+    }
+
+     /**
+     * Returns the plan status.
+     */
+    public static getPlanStatus(plan: Enums.SubscriptionStatus): string {
+        switch (plan) {
+            case Enums.SubscriptionStatus.ACTIVE: return 'ACTIVE';
+            case Enums.SubscriptionStatus.PENDING: return 'PENDING';
+            case Enums.SubscriptionStatus.CANCELED: return 'CANCELED';
+            case Enums.SubscriptionStatus.DISABLED: return 'DISABLED';
+        }
     }
 }

@@ -5,6 +5,8 @@ import GenericStoreInstance, { GenericStore } from '../../stores/genericstore';
 import { Dashboard } from '../dashboard/dashboard';
 import UserStoreInstance, { UserStore } from '../../stores/userstore';
 import SubscriptionActionCreator from '../../actioncreators/subscriptionactioncreator';
+import { ContainerErrorBoundary } from '../dashboard/containererrorboundary';
+import GenericActionCreator from '../../actioncreators/genericactioncreator';
 
 interface Props {
 
@@ -33,13 +35,13 @@ export class AppContainer extends React.Component<Props, State> {
 
     public render() {
         return (
-            <>
-                {
-                    UserStoreInstance.isLoggedIn || this.state.showDashboard
-                        ? <Dashboard id={'userDashboard'} key={'key-userDashboard'}/>
-                        : (this.state.showRegistration ? <Registration /> : <Login />)
-                }
-            </>
+            <ContainerErrorBoundary>
+            {
+                UserStoreInstance.isLoggedIn || this.state.showDashboard
+                    ? <Dashboard id={'userDashboard'} key={'key-userDashboard'}/>
+                    : (this.state.showRegistration ? <Registration /> : <Login />)
+            }
+            </ContainerErrorBoundary>
         );
     }
 
@@ -82,6 +84,7 @@ export class AppContainer extends React.Component<Props, State> {
             showRegistration: false,
             showDashboard: true
         });
+        GenericActionCreator.updateBreadCrumb(GenericStoreInstance.defaultBreadcrumb, 'INIT');
     }
 
     /**
