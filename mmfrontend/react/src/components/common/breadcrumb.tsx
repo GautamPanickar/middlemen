@@ -21,7 +21,7 @@ export class Breadcrumb extends React.Component<Props, State> {
     public render() {
         return (
             <nav aria-label='breadcrumb' className='mt-1'>
-                <ol className='breadcrumb'>
+                <ol className='breadcrumb float-right pt-4 pb-0'>
                     {this.breadcrumbItemsToRender}
                 </ol>
             </nav>

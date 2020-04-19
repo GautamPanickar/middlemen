@@ -120,7 +120,7 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                         </li>
                         <li className='list-group-item' >
                             <p className='m-0 font-weight-light'>GST Number</p>
-                            <h6>{currentSubscription.gstNumber}</h6>
+                            <h6>{currentSubscriber.gstNumber}</h6>
                         </li>
                     </>
                     : <></>

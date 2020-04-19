@@ -15,4 +15,5 @@ export interface User {
     newSubscription?: Subscription;
     subscriptions?: Subscription[];
     authorities?: Authority[];
+    gstNumber?: string;
   }

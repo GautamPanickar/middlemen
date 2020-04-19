@@ -1,11 +1,12 @@
 import { Enums } from '../../utilities/enums';
+import { Moment } from 'moment';
 
 interface SubscriptionDetails {
     plan: Enums.SubscriptionPlan;
     status: Enums.SubscriptionStatus;
-    cancelledOn?: Date;
-    nextBillingOn?: Date;
-    startedOn?: Date;
+    cancelledOn?: Moment;
+    nextBillingOn?: Moment;
+    startedOn?: Moment;
     previousPlan?: number;
     price?: number;    
 }

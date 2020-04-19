@@ -45,6 +45,12 @@
     font-size: 1.5rem;
 }
 
+/* To be rmeoved if the UI breaks apart! */
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 /* Overlay */ 
 .overlay {
     position: fixed;

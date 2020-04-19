@@ -11,6 +11,7 @@ interface Props extends PropsBase {
     error?: string;
     onValueChange: Function;
     defaultValue?: string;
+    className?: string;
 }
 
 interface State {
@@ -38,8 +39,9 @@ export class TextField extends React.Component<Props, State> {
         let inputType: string = this.props.type === 'Email' ? 'email' 
                                 : this.props.type === 'Text' ? 'text'
                                 :  this.props.type === 'Password' ? 'password' : '';
+        let formGroupClass = 'form-group ' + this.props.className;
         return (
-            <div className='form-group' id={this.props.id} key={this.props.key}>
+            <div className={formGroupClass} id={this.props.id} key={this.props.key}>
                 <label className='form-control-label' htmlFor={this.props.name}>{this.props.labelName}</label>
                 <input type={inputType} className= {inputClass}
                     name={this.props.name} id={this.props.name}

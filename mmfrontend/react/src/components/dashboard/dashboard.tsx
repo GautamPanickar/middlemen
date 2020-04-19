@@ -12,6 +12,9 @@ import { Breadcrumb } from '../common/breadcrumb';
 import { SubscripitonView } from '../subscription/subscriptionview';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import BreadcrumbItem from '../../types/others/breadcrumbitem';
+import { SubscripitonChange } from '../subscription/subscriptionchange';
+import { AccountView } from '../account/accountview';
+import { AccountEdit } from '../account/accountedit';
 
 interface Props extends PropsBase {
 
@@ -37,6 +40,9 @@ export class Dashboard extends React.Component<Props, State> {
         this.onCancelPlansClick = this.onCancelPlansClick.bind(this);
         this.onChangePlansClick = this.onChangePlansClick.bind(this);
         this.onBuyAddonsClick = this.onBuyAddonsClick.bind(this);
+        this.onViewAccountClick = this.onViewAccountClick.bind(this);
+        this.onEditAccountClick = this.onEditAccountClick.bind(this);
+        this.onChangePasswordClick = this.onChangePasswordClick.bind(this);
     }
 
     public render() {
@@ -60,7 +66,7 @@ export class Dashboard extends React.Component<Props, State> {
                                 : <></>
                         }
                         {
-                            this.state.showBreadCrumb ? <Breadcrumb id={'breadCrumbHolder'} key={'key-breadCrumbHolder'} /> : <></>
+                            // this.state.showBreadCrumb ? <Breadcrumb id={'breadCrumbHolder'} key={'key-breadCrumbHolder'} /> : <></>
                         }                        
                         <div className='m-1 dash-box-heading'>
                             <h1 className='display-4 font-weight-light'>{this.activeScreenHeading}</h1>
@@ -72,7 +78,7 @@ export class Dashboard extends React.Component<Props, State> {
                                     {this.getActiveScreenItems()}
                                 </div>
                             </div>
-                            <div className='col-lg-3 col-md-3 dashboard-subscriber-info'>
+                            <div className='col-lg-3 col-md-3 dashboard-subscriber-info right-panel-separator'>
                                 <SusbcriberInfoBox billingAddressOnly={false}/>
                             </div>
                         </div>
@@ -93,7 +99,10 @@ export class Dashboard extends React.Component<Props, State> {
                             onBuyAddonsCallback={this.onBuyAddonsClick}/>
                     </div>
                     <div className='col-lg-3 col-md-3'>
-                        <SubscriberDashItem id={'subscriberDashItem'} key={'key-subscriberDashItem'}/>
+                        <SubscriberDashItem id={'subscriberDashItem'} key={'key-subscriberDashItem'}
+                            onViewCallback={this.onViewAccountClick} 
+                            onEditCallback={this.onEditAccountClick}
+                            onChangePasswordCallback={this.onChangePasswordClick}/>
                     </div>
                     <div className='col-lg-3 col-md-3'>
                         <PaymentDashItem id={'paymentDashItem'} key={'key-paymentDashItem'}/>
@@ -103,7 +112,13 @@ export class Dashboard extends React.Component<Props, State> {
                     </div>
                 </>);
             case 'SubscriptionView': 
-                return (<SubscripitonView id={'subscriptionViewBox'} key={'key-subscriptionViewBox'} />)
+                return (<SubscripitonView id={'subscriptionViewBox'} key={'key-subscriptionViewBox'} />);
+            case 'SubscriptionChange':
+                return (<SubscripitonChange id={'subscriptionChangeBox'} key={'key-subscriptionChangeBox'} />);
+            case 'AccountView':
+                return (<AccountView id={'accountViewBox'} key={'key-accountViewBox'} />);
+            case 'AccountEdit':
+                return (<AccountEdit id={'accountEditBox'} key={'key-accountEditBox'} />);
         }
     }
 
@@ -113,6 +128,12 @@ export class Dashboard extends React.Component<Props, State> {
                 return 'Subscription Dashboard';
             case 'SubscriptionView': 
                 return 'View current plans';
+            case 'SubscriptionChange':
+                return 'Change subscription plans';
+            case 'AccountView':
+                return 'View account';
+            case 'AccountEdit':
+                return 'Edit account';
         }
     }
 
@@ -167,14 +188,64 @@ export class Dashboard extends React.Component<Props, State> {
     }
 
     private onChangePlansClick(): void {
+        const item: BreadcrumbItem = {
+            ukey: 'subscriptionsKEY-002',
+            name: 'Edit Subscriptions',
+            parent: null,
+            active: true
+        };
+        GenericActionCreator.updateBreadCrumb(item, 'PUSH');
         this.setState({
-            activeScreen: 'SubscriptionChange'
+            activeScreen: 'SubscriptionChange',
+            showBreadCrumb: true
         });
     }
 
     private onBuyAddonsClick(): void {
         this.setState({
             activeScreen: 'BuyAddons'
+        });
+    }
+
+    private onViewAccountClick(): void {
+        const item: BreadcrumbItem = {
+            ukey: 'accountsKEY-001',
+            name: 'View Account',
+            parent: null,
+            active: true
+        };
+        GenericActionCreator.updateBreadCrumb(item, 'PUSH');
+        this.setState({
+            activeScreen: 'AccountView',
+            showBreadCrumb: true
+        });
+    }
+
+    private onEditAccountClick(): void {
+        const item: BreadcrumbItem = {
+            ukey: 'accountsKEY-002',
+            name: 'Edit Account',
+            parent: null,
+            active: true
+        };
+        GenericActionCreator.updateBreadCrumb(item, 'PUSH');
+        this.setState({
+            activeScreen: 'AccountEdit',
+            showBreadCrumb: true
+        });
+    }
+
+    private onChangePasswordClick(): void {
+        const item: BreadcrumbItem = {
+            ukey: 'accountsKEY-003',
+            name: 'Change Password',
+            parent: null,
+            active: true
+        };
+        GenericActionCreator.updateBreadCrumb(item, 'PUSH');
+        this.setState({
+            activeScreen: 'ChangePassword',
+            showBreadCrumb: true
         });
     }
 }

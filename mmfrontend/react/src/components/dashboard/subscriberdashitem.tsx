@@ -1,7 +1,9 @@
 import * as React from 'react'
 
 interface Props extends PropsBase{
-
+    onViewCallback: Function;
+    onEditCallback: Function;
+    onChangePasswordCallback: Function;
 }
 
 /**
@@ -24,14 +26,14 @@ export const SubscriberDashItem = (props: Props) => {
     );
 
     function view() {
-
+        props.onViewCallback();
     }
 
     function edit() {
-
+        props.onEditCallback();
     }
 
     function password() {
-
+        props.onChangePasswordCallback();
     }
 }

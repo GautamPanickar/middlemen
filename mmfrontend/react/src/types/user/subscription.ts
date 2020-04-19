@@ -4,7 +4,6 @@ interface Subscription {
     id?: string;
     company?: string;
     email?: string;
-    gstNumber?: string;
     companyId?: string;
     activated?: boolean;
     details?: SubscriptionDetails;

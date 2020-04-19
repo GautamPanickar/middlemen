@@ -1,3 +1,7 @@
+import * as moment from 'moment';
+import { Moment } from 'moment';
+import SelectorOption from '../components/typings/selectoroption';
+
 export class AppUtils {
     /**
      * Retruns if the string value is empty or not.
@@ -36,23 +40,70 @@ export class AppUtils {
         return a.toUpperCase() === b.toUpperCase();
     }
 
-    /**
-     * Returns true if date1 comes after date2
-     * @param date1 
-     * @param date2 
+   /**
+     * Returns a readable date in the format (February 1, 2019 12:22 PM)
+     * @param {moment.Moment} date
+     * @returns {string}
      */
-    public static isDateAfter(date1: Date, date2: Date): boolean {
-        return date1 > date2;
+    public static getReadableDate(date: Moment): string {
+        return moment(date).format('lll');
     }
 
     /**
-     * Returns true if both the dates are the same. Comopared on day, no time is considered.
-     * @param date1 
-     * @param date2 
+     * Returns the readable date without time February 1, 2019)
+     * @param {moment.Moment} date
+     * @returns {string}
      */
-    public static areSameDates(date1: Date, date2: Date): boolean {
-        return date1.getFullYear() === date2.getFullYear()
-            &&  date1.getMonth() === date2.getMonth() 
-            &&  date1.getDay() === date2.getDay();
+    public static getReadableDateWithoutTime(date: Moment): string {
+        return moment(date).format('ll');
+    }
+
+    /**
+     * Returns a formatted date string.
+     * @param {string} format
+     * @param {moment.Moment} date
+     * @returns {string}
+     */
+    public static getFormattedDate(format: string, date: Moment): string {
+        return moment(date).format(format);
+    }
+
+    /**
+     * Checks if the given dates are same.
+     * The granularity is limited to day, month and year.
+     * Time is not considered.
+     * @param {moment.Moment} date1
+     * @param {moment.Moment} date2
+     * @returns {boolean}
+     */
+    public static areSameDates(date1: Moment, date2: Moment): boolean {
+        return date1.isSame(date2, 'day');
+    }
+
+    /**
+     * Checks if date1 is after date2
+     * The granularity is limited to day, month and year.
+     * Time is not considered.
+     * @param {moment.Moment} date1
+     * @param {moment.Moment} date2
+     * @returns {boolean}
+     */
+    public static isDateAfter(date1: Moment, date2: Moment): boolean {
+        return date1.isAfter(date2, 'day');
+    }
+
+    /**
+     * Maps the constants to Selector object.
+     * @param constants 
+     */
+    public static mapConstantsToSelector(constants: string[]): SelectorOption[]  {
+        let selectorOptions: SelectorOption[] = [];
+        constants.map((item: string) => {
+            selectorOptions.push({
+                label: item,
+                value: item
+            });
+        });
+        return selectorOptions;
     }
 }

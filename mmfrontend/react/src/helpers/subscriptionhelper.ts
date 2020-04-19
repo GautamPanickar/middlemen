@@ -3,6 +3,9 @@ import { PlanDisplayInfo } from '../types/others/plandisplayinfo';
 import SubscriptionDetails from '../types/user/subscriptiondetails';
 import { AppUtils } from '../utilities/apputils';
 import { Address } from '../types/user/address';
+import { Moment } from 'moment';
+import moment = require('moment');
+import BalanceAmount from '../components/typings/balanceamount';
 
 export class SubscriptionHelper {
 
@@ -49,8 +52,7 @@ export class SubscriptionHelper {
      * @param subscription 
      */
     public static hasSubscriptionExpired(subscription: SubscriptionDetails): boolean {
-        const nextBillingDate: Date = new Date(subscription.nextBillingOn);
-        return AppUtils.isDateAfter(new Date(), nextBillingDate) && subscription.status.toString() !== 'CANCELED';
+        return AppUtils.isDateAfter(moment(), subscription.nextBillingOn) && subscription.status.toString() !== 'CANCELED';
     }
 
     /**
@@ -58,8 +60,7 @@ export class SubscriptionHelper {
      * @param {SubscriptionDetails} subscription
      */
     public static isSubscriptionExpiringToday(subscription: SubscriptionDetails): boolean {
-        const nextBillingDate: Date = new Date(subscription.nextBillingOn);
-        return AppUtils.areSameDates(new Date(), nextBillingDate) && subscription.status.toString() !== 'CANCELED';
+        return AppUtils.areSameDates(moment(), subscription.nextBillingOn) && subscription.status.toString() !== 'CANCELED';
     }
 
     /**
@@ -98,5 +99,44 @@ export class SubscriptionHelper {
             case Enums.SubscriptionStatus.CANCELED: return 'CANCELED';
             case Enums.SubscriptionStatus.DISABLED: return 'DISABLED';
         }
+    }
+
+    /**
+     * Checks if the plans are same.
+     */
+    public static areSamePlans(paidPlan: Enums.SubscriptionPlan, chosenPlan: Enums.SubscriptionPlan): boolean {
+        return paidPlan === chosenPlan;
+    }
+
+    /**
+     * Checks if the subscription plan is being downgraded.
+     */
+    public static isPlanBeingDowngraded(paidPlan: Enums.SubscriptionPlan, chosenPlan: Enums.SubscriptionPlan): boolean {
+        const paidPlanPrice: number = Number(this.getPlanInfo(paidPlan).price);
+        const chosenPlanPrice: number = Number(this.getPlanInfo(chosenPlan).price);
+        return chosenPlanPrice < paidPlanPrice;
+    }
+
+    /**
+     * Returns the balance amount to pay when upgrading or downgrading a subscription.
+     * @param subscriptionDetails 
+     * @param chosenPlan 
+     */
+    public static getBalanceAmount(subscriptionDetails: SubscriptionDetails, chosenPlan: Enums.SubscriptionPlan): BalanceAmount {
+        const oldStartDate: Moment = subscriptionDetails.startedOn;
+        const oldBillingDate: Moment = subscriptionDetails.nextBillingOn;
+        const currentDate: Moment = moment();
+        const oldPlanDurationInDays: number = Math.abs(oldStartDate.diff(oldBillingDate, 'days'));
+        const oldPlanPricePerDay: number = Math.round(subscriptionDetails.price / oldPlanDurationInDays);
+        const oldPlanDurationTillDate: number = Math.abs(oldStartDate.diff(currentDate, 'days'));
+        const exhaustedPriceForOldPlan: number = Math.round(oldPlanDurationTillDate * oldPlanPricePerDay);
+        const oldPlanSavings: number = subscriptionDetails.price - exhaustedPriceForOldPlan;
+        const amountPayable = Number(SubscriptionHelper.getPlanInfo(chosenPlan).price) - oldPlanSavings;
+        return {
+            previousDuration: oldPlanDurationTillDate,
+            exhaustedAmount: exhaustedPriceForOldPlan,
+            previousSavings: oldPlanSavings,
+            amountToPay: amountPayable
+        };
     }
 }
