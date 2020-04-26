@@ -10,6 +10,7 @@ import WrongCredentialsException from '../../utils/exceptions/authentication/wro
 import SomethingWrongException from '../../utils/exceptions/base/somethingwrongexception';
 import SubscriptionService from '../../services/subscription/subscriptionservice';
 import UserManager from '../../managers/usermanager';
+import { AppUtils } from '../../utils/apputils';
 
 class AuthenticationService {
     private user = UserModel;
@@ -39,12 +40,13 @@ class AuthenticationService {
             this.userManager.setAuthorities(dto);
             const createdUser: User = await this.user.create({...dto,
                 password: hashedPassword, 
+                companyId:  AppUtils.uniqueCompanyId,
                 activated: true});
             token = AuthenticationUtils.generateAuthenticationToken(createdUser._id, createdUser.email, createdUser.name);
             createdUser.password = undefined;
             createdUser.token = token;
             // If the user has a subscription then save it.
-            if (createdUser && dto.newSubscription) {
+            if (createdUser && dto.newSubscription && AppUtils.isNotEmpty(dto.company)) {
                 this.subscriptionService.saveSubscription(dto.newSubscription, createdUser._id.toString());
             }
             return createdUser;

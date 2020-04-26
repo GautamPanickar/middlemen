@@ -150,17 +150,17 @@ export class Login extends React.Component<Props, State> {
      * After successful login or authentication
      */
     private onSuccessfulLogin = () => {
-        if (GenericStoreInstance.hasOverlay) {
-            GenericActionCreator.toggleOverlay(false);
-        }
+        // if (GenericStoreInstance.hasOverlay) {
+        //     GenericActionCreator.toggleOverlay(false);
+        // }
     }
 
     /**
      * On authentication failure.
      */
     private onFailedLogin = () => {
-        if (GenericStoreInstance.hasOverlay) {
-            GenericActionCreator.toggleOverlay(false);
-        }
+        // if (GenericStoreInstance.hasOverlay) {
+        //     GenericActionCreator.toggleOverlay(false);
+        // }
     }
 }

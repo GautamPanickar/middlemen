@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Spinner } from '../common/spinner';
 import { User } from '../../types/user/user';
-import UserStoreInstance from '../../stores/userstore';
+import UserStoreInstance, { UserStore } from '../../stores/userstore';
 import { TextArea } from '../common/textarea';
 import { SubscriptionHelper } from '../../helpers/subscriptionhelper';
 import { AppUtils } from '../../utilities/apputils';
 import { Address } from '../../types/user/address';
 import Subscription from '../../types/user/subscription';
 import { TextField } from '../common/textfield';
+import UserActionCreator from '../../actioncreators/useractioncreator';
 
 interface Props {
     billingAddressOnly?: boolean;
@@ -24,9 +25,10 @@ interface State {
     name: string;
     billingAddress: string;
     contactAddress: string;
+    renderedOn: number;
 }
 
-export class SusbcriberInfoBox extends React.Component<Props, State> {
+export class SubscriberInfoBox extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state= {
@@ -39,7 +41,8 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
             companyName: '',
             name: '',
             billingAddress: '',
-            contactAddress: ''
+            contactAddress: '',
+            renderedOn: 0
         };
         // Bindings
         this.onSubscriberEdit = this.onSubscriberEdit.bind(this);
@@ -47,6 +50,7 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
         this.onCancelClick = this.onCancelClick.bind(this);
         this.onSaveClick = this.onSaveClick.bind(this);
         this.handleFieldValueChange = this.handleFieldValueChange.bind(this);
+        this.onUserInfoUpdate = this.onUserInfoUpdate.bind(this);
     }
 
     public render() {
@@ -104,7 +108,6 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
      * Returns the important fields for a subscriber
      */
     private get subscriberInfoFields(): JSX.Element {
-        let currentSubscriber: User = UserStoreInstance.loggedInUser;
         let subscriptions: Subscription[] = UserStoreInstance.subscriptions;
         let hasOneSubscription: boolean =  subscriptions && subscriptions.length === 1;
         let currentSubscription: Subscription = hasOneSubscription ? subscriptions[0] : undefined;
@@ -113,27 +116,27 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                 {
                     currentSubscription
                     ? <>
-                        {this.getCompanyField(currentSubscription)}
+                        {this.getCompanyField()}
                         <li className='list-group-item'>
                             <p className='m-0 font-weight-light'>Company ID</p>
-                            <h6>{currentSubscription.companyId}</h6>
+                            <h6>{this.currentSubscriber.companyId}</h6>
                         </li>
                         <li className='list-group-item' >
                             <p className='m-0 font-weight-light'>GST Number</p>
-                            <h6>{currentSubscriber.gstNumber}</h6>
+                            <h6>{this.currentSubscriber.gstNumber}</h6>
                         </li>
                     </>
                     : <></>
                 }
                 {
-                    currentSubscriber
+                    this.currentSubscriber
                     ? <>
-                        {this.getNameField(currentSubscriber)}
+                        {this.getNameField()}
                         <li className='list-group-item' >
                             <p className='m-0 font-weight-light'>Email</p>
-                            <h6>{currentSubscriber.email}</h6>
+                            <h6>{this.currentSubscriber.email}</h6>
                         </li>
-                        {currentSubscriber.contactAddress ? this.getContactAddressField(currentSubscriber) : <></>}
+                        {this.currentSubscriber.contactAddress ? this.getContactAddressField() : <></>}
                     </>
                     : <></>
                 }
@@ -144,9 +147,8 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
 
     /**
      * Returns the contact address textfield with editable text field.
-     * @param currentSubscriber 
      */
-    private getContactAddressField(currentSubscriber: User): JSX.Element {
+    private getContactAddressField(): JSX.Element {
         return (
             <>
             <li className='list-group-item'>
@@ -158,7 +160,7 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                                 &nbsp;<i className='fas fa-pen'></i>
                             </a>
                         </p>
-                        <h6 dangerouslySetInnerHTML={this.getAddressAsHTML(currentSubscriber.contactAddress)}></h6>
+                        <h6 dangerouslySetInnerHTML={this.getAddressAsHTML(this.currentSubscriber.contactAddress)}></h6>
                     </div>
                     : <div>
                         <TextArea id='contactAddressTA' key='key-contactAddressTA'
@@ -172,7 +174,7 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
             </li>
             <li className='list-group-item'>
                 <p className='m-0 font-weight-light'>Phone Number</p>
-                <h6>{currentSubscriber.contactAddress.phone}</h6>
+                <h6>{this.currentSubscriber.contactAddress.phone}</h6>
             </li>
             </>
         );
@@ -180,9 +182,8 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
 
     /**
      * Returns the editable name field
-     * @param currentSubscriber 
      */
-    private getNameField(currentSubscriber: User): JSX.Element {
+    private getNameField(): JSX.Element {
         return (
             <li className='list-group-item'>
                 {
@@ -193,13 +194,13 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                                 &nbsp;<i className='fas fa-pen'></i>
                             </a>
                         </p>
-                        <h6>{currentSubscriber.name}</h6>
+                        <h6>{this.currentSubscriber.name}</h6>
                     </div>
                     : <div>
                         <TextField id={'name'} key={'key-name'}
                             type='Text' labelName={'Name'} name='name' borderless={true}
                             error={this.state.nameError}
-                            defaultValue={currentSubscriber.name}
+                            defaultValue={this.currentSubscriber.name}
                             onValueChange={this.handleFieldValueChange.bind(this, 'Name')}/>
                         {this.getEditableFieldActionButtons('Name')}
                     </div>
@@ -210,28 +211,27 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
 
     /**
      * Returns the editable company name field
-     * @param currentSubscription 
      */
-    private getCompanyField(currentSubscription: Subscription): JSX.Element {
+    private getCompanyField(): JSX.Element {
         return(
             <li className='list-group-item'>
                 {
-                    this.state.fieldToShow !== 'Hospital'
+                    this.state.fieldToShow !== 'Company'
                     ? <div>
-                        <p className='m-0 font-weight-light'>Hospital
-                            <a href='javascript:void(0);' onClick={this.onFieldEdit.bind(this, 'Hospital')}>
+                        <p className='m-0 font-weight-light'>Company
+                            <a href='javascript:void(0);' onClick={this.onFieldEdit.bind(this, 'Company')}>
                                 &nbsp;<i className='fas fa-pen'></i>
                             </a>
                         </p>
-                        <h6>{currentSubscription.company}</h6>
+                        <h6>{this.currentSubscriber.company}</h6>
                     </div>
                     : <div>
                         <TextField id={'companyName'} key={'key-companyName'}
                             type='Text' labelName={'Company'} name='companyName' borderless={true}
                             error={this.state.companyNameError}
-                            defaultValue={currentSubscription.company}
-                            onValueChange={this.handleFieldValueChange.bind(this, 'Hospital')}/>
-                        {this.getEditableFieldActionButtons('Hospital')}
+                            defaultValue={this.currentSubscriber.company}
+                            onValueChange={this.handleFieldValueChange.bind(this, 'Company')}/>
+                        {this.getEditableFieldActionButtons('Company')}
                     </div>
                 }
             </li>
@@ -249,6 +249,14 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                 <button type='button' className='btn ml-1 btn-sm btn-primary' onClick={this.onSaveClick.bind(this, fieldName)}>Save</button>
             </div>
         );
+    }
+
+    public componentDidMount() {
+        UserStoreInstance.addListener(UserStore.USER_INFO_UPDATED_EVENT, this.onUserInfoUpdate);
+    }
+
+    public componentWillUnmount() {
+        UserStoreInstance.removeListener(UserStore.USER_INFO_UPDATED_EVENT, this.onUserInfoUpdate);
     }
 
     /**
@@ -299,7 +307,7 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
                     name: value
                 });
                 break;
-            case 'Hospital': 
+            case 'Company': 
                 this.setState({
                     companyName: value
                 });
@@ -326,6 +334,32 @@ export class SusbcriberInfoBox extends React.Component<Props, State> {
      * @param field 
      */
     private onSaveClick(field: string): void {
+        const userInfo: User = Object.assign({}, this.currentSubscriber);
+        switch (field) {
+            case 'Company': 
+                userInfo.company = this.state.companyName;
+                break;
+            case 'BillingAddress': 
+                userInfo.billingAddress.line1 = this.state.billingAddress;
+                break;
+            case 'ContactAddress': 
+                userInfo.contactAddress.line1 = this.state.contactAddress;
+                break;
+            case 'Name': 
+                userInfo.name = this.state.name;
+                break;
+        }
+        UserActionCreator.updateUserInfo(userInfo._id, userInfo, field);
+    }
 
+    private get currentSubscriber(): User {
+        return UserStoreInstance.loggedInUser;
+    }
+
+    private onUserInfoUpdate(): void {
+        this.setState({
+            renderedOn: Date.now(),
+            fieldToShow: ''
+        });
     }
 }

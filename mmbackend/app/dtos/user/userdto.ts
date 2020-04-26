@@ -15,4 +15,7 @@ export interface UserDTO {
   newSubscription?: SubscriptionDTO;
   subscriptions?: SubscriptionDTO[];
   authorities?: AuthorityDTO[];
+  company?: string;
+  gstNumber?: string;
+  companyId?: string;
 }

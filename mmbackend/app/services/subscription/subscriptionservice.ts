@@ -35,29 +35,27 @@ class SubscriptionService {
      * @param userId 
      */
     public async saveSubscription(dto: SubscriptionDTO, userId?: string) {
-        if (AppUtils.isNotEmpty(dto.company)) {
-            try {
-                if (AppUtils.isEmpty(dto.id) && dto.details) {
-                    // New Subscription is initially created with a pending status. 
-                    // Only after the payment would the plan be activated.
-                    dto.details.status = Enums.SubscriptionStatus.PENDING;
-                    dto.details.startedOn = undefined;
-                    const newSubscription: Subscription = await this.subscription.create({...dto,
-                        user_id: AppUtils.isNotEmpty(userId) ? userId : dto.user_id, 
-                        activated: false});
-                    return newSubscription;
+        try {
+            if (AppUtils.isEmpty(dto.id) && dto.details) {
+                // New Subscription is initially created with a pending status. 
+                // Only after the payment would the plan be activated.
+                dto.details.status = Enums.SubscriptionStatus.PENDING;
+                dto.details.startedOn = undefined;
+                const newSubscription: Subscription = await this.subscription.create({...dto,
+                    user_id: AppUtils.isNotEmpty(userId) ? userId : dto.user_id, 
+                    activated: false});
+                return newSubscription;
+            } else {
+                // Exisiting subscription getting updated
+                if (await this.findById(dto.id)) {
+                    const updatedSubscription: Subscription = await this.subscription.save({...dto});
+                    return updatedSubscription;
                 } else {
-                    // Exisiting subscription getting updated
-                    if (await this.findById(dto.id)) {
-                        const updatedSubscription: Subscription = await this.subscription.save({...dto});
-                        return updatedSubscription;
-                    } else {
-                        throw new CustomException('Could not find the subscription');
-                    }
+                    throw new CustomException('Could not find the subscription');
                 }
-            } catch (error) {
-                throw new SomethingWrongException(error);
             }
+        } catch (error) {
+            throw new SomethingWrongException(error);
         }
     }
 
@@ -70,7 +68,6 @@ class SubscriptionService {
             const subscritpionToUpdate: Subscription = await this.findById(id);
             if (subscritpionToUpdate) {
                 subscritpionToUpdate.activated = true;
-                subscritpionToUpdate.companyId = AppUtils.uniqueCompanyId;
                 subscritpionToUpdate.details.status = Enums.SubscriptionStatus.ACTIVE;
                 const currentDate: Date = new Date();
                 const nextDate: Date = new Date();

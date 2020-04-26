@@ -10,10 +10,12 @@ interface Props extends PropsBase {
     error?: string;
     onValueChange: Function;
     rows: number;
+    defaultValue?: string;
 }
 
 interface State {
     value: string;
+    defaultValue: string;
 }
 
 export class TextArea extends React.Component<Props, State> {
@@ -21,7 +23,8 @@ export class TextArea extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            value: ''
+            value: '',
+            defaultValue:  this.props.defaultValue
         };
 
         // Bindings
@@ -37,7 +40,7 @@ export class TextArea extends React.Component<Props, State> {
                     name={this.props.name} id={this.props.name}
                     placeholder={this.props.placeHolder}
                     required={this.props.required}
-                    value={this.state.value}
+                    value={AppUtils.isNotEmpty(this.state.defaultValue) ? this.state.defaultValue : this.state.value}
                     onChange={this.handleValueChange}/>
                 {AppUtils.isNotEmpty(this.props.error)
                         ? <small className='form-text text-danger'>{this.props.error}</small>
@@ -58,7 +61,8 @@ export class TextArea extends React.Component<Props, State> {
      */
     private handleValueChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
         this.setState({
-            value: event.target.value
+            value: event.target.value,
+            defaultValue: ''
         });
     }
 }

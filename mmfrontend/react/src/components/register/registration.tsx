@@ -11,8 +11,6 @@ import { PlanDisplayInfo } from '../../types/others/plandisplayinfo';
 import { User } from '../../types/user/user';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
-import UserStoreInstance, { UserStore } from '../../stores/userstore';
-import GenericStoreInstance from '../../stores/genericstore';
 
 interface Props {
 
@@ -56,11 +54,8 @@ export class Registration extends React.Component<Props, State> {
         this.handleCompanyChange = this.handleCompanyChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.onRegister = this.onRegister.bind(this);
-        this.onPlanSelectorClick = this.onPlanSelectorClick.bind(this);
         this.onPlanChange = this.onPlanChange.bind(this);
         this.onPurchasingPlan = this.onPurchasingPlan.bind(this);
-        this.onSuccessfulRegistration = this.onSuccessfulRegistration.bind(this);
-        this.onUnSuccessfulRegistration = this.onUnSuccessfulRegistration.bind(this);
     }
 
     public render() {
@@ -142,13 +137,9 @@ export class Registration extends React.Component<Props, State> {
     }
 
     public componentDidMount() {
-        UserStoreInstance.addListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onSuccessfulRegistration);
-        UserStoreInstance.addListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onUnSuccessfulRegistration);
     }
 
     public componentWillUnmount() {
-        UserStoreInstance.removeListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onSuccessfulRegistration);
-        UserStoreInstance.removeListener(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT, this.onUnSuccessfulRegistration);
     }
 
     private onAlertHide(): void {
@@ -200,8 +191,8 @@ export class Registration extends React.Component<Props, State> {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
+            company: this.state.company,
             newSubscription: {
-                company: this.state.company,
                 details: {
                     plan: this.state.plan,
                     status: Enums.SubscriptionStatus.PENDING
@@ -281,13 +272,6 @@ export class Registration extends React.Component<Props, State> {
     }
 
     /**
-     * On clicking the plan selector drop down
-     */
-    private onPlanSelectorClick(): void {
-
-    }
-
-    /**
      * Returns the selcted subscription plan information to be displayed on to the right sdie panel
      */
     private get selectedPlanInfo(): PlanDisplayInfo {
@@ -318,17 +302,5 @@ export class Registration extends React.Component<Props, State> {
             formDisplay: true,
             plan: plan
         });
-    }
-
-    private onSuccessfulRegistration(): void {
-        if (GenericStoreInstance.hasOverlay) {
-            GenericActionCreator.toggleOverlay(false);
-        }
-    }
-
-    private onUnSuccessfulRegistration(): void {
-        if (GenericStoreInstance.hasOverlay) {
-            GenericActionCreator.toggleOverlay(false);
-        }
     }
 }

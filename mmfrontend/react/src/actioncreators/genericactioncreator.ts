@@ -10,14 +10,18 @@ class GenericActionCreator {
      * @param show 
      * @param hasSpinner 
      */
-    public static toggleOverlay(show: boolean, hasSpinner: boolean = false): void {
-        if (!show) {
-            setTimeout(() => {
-                new OverlayAction(show, hasSpinner);
-            }, 1000);
-        } else {
-            new OverlayAction(show, hasSpinner);
-        }
+    public static toggleOverlay(show: boolean, hasSpinner: boolean = false): Promise<any> {
+        // if (!show) {
+        //     setTimeout(() => {
+        //         new OverlayAction(show, hasSpinner);
+        //     }, 1000);
+        // } else {
+        //     new OverlayAction(show, hasSpinner);
+        // }
+
+        return new Promise((resolve, reject) => {
+            resolve(new OverlayAction(show, hasSpinner));
+        });
     }
 
     /**

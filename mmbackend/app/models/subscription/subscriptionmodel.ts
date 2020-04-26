@@ -11,10 +11,7 @@ const SubscriptionDetailsSchema: Schema = new Schema({
 }, { timestamps: true});
 
 const SubscriptionSchema: Schema = new Schema({
-    company: String,
     email: String,
-    gstNumber: String,
-    companyId: String,
     activated: Boolean,
     details: SubscriptionDetailsSchema,
     user_id: String

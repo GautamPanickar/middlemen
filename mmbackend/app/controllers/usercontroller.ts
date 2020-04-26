@@ -23,9 +23,10 @@ class UserController implements Controller {
      * Routes for user actions.
      */
     private initializeRoutes(): void {
-        this.router.put(`${this.path}`, this.update);
+        this.router.put(`${this.path}/:id`, this.update);
         this.router.get(`${this.path}/:id`, this.loadById);
         this.router.get(`${this.path}/all`, this.loadAll);
+        this.router.patch(`${this.path}/:id/update`, this.updateUserInfo);
     }
 
     /**
@@ -33,8 +34,9 @@ class UserController implements Controller {
      */
     public update = async(request: Request, response: Response, next: NextFunction) => {
         const user: UserDTO = request.body;
+        const id: string = request.params.id;
         try {
-            if (AppUtils.isNotEmpty(user.id)) {
+            if (AppUtils.isNotEmpty(id)) {
                 const updatedUser: User = await this.userManager.updateUser(user);
                 return response.send({
                     'status': 200,
@@ -83,6 +85,29 @@ class UserController implements Controller {
                     'users': users,
                     'message': 'Users found'
                 });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * Updates the user info for the field metnioned as query param.
+     */
+    public updateUserInfo = async(request: Request, response: Response, next: NextFunction) => {
+        const field: string = request.query.field;
+        const id: string = request.params.id;
+        const user: UserDTO = request.body;
+        try {
+            if (AppUtils.isNotEmpty(field)) {
+                const updatedUser: User = await this.userService.updateUserInfo(id, user, field);
+                return response.send({
+                    'status': 200,
+                    'user': updatedUser,
+                    'message': 'User information updated'
+                });
+            } else {
+                next(new CustomException('The field to be updated for the user cannot be empty'));
+            }
         } catch (error) {
             next(error);
         }

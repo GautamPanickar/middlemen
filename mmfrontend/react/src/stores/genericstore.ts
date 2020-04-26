@@ -46,7 +46,9 @@ export class GenericStore extends EventEmitter {
                 const alertAction = action as AlertAction;
                 this._alertMessage = alertAction.message;
                 this._alertType = alertAction.type;
+                this.hideOverlay();
                 this.emit(GenericStore.SHOW_HIDE_ALERT_EVENT);
+                this.emit(GenericStore.SHOW_HIDE_OVERLAY);
                 break;
             case ActionType.UPDATE_BREADCRUMB_ACTION:
                 const breadcrumbAction = action as UpdateBreadcrumbAction;
@@ -63,7 +65,21 @@ export class GenericStore extends EventEmitter {
                 }
                 this.emit(GenericStore.BREADCRUMBS_UPDATED_EVENT);
                 break; 
+            case ActionType.LOGIN:
+            case ActionType.USER_REGISTERED_ACTION:
+            case ActionType.USER_INFO_UPDATED_ACTION:
+                this.hideOverlay();
+                this.emit(GenericStore.SHOW_HIDE_OVERLAY);
+                break;
         }
+    }
+
+    /**
+     * Hides the overlay.
+     */
+    private hideOverlay(): void {
+        this._hasOverlay = false;
+        this._hasSpinner = false;
     }
 
     /**

@@ -14,6 +14,9 @@ interface User {
     contactAddress?: Address;
     billingAddress?: Address;
     authorities?: Auhtority[];
+    company?: string;
+    gstNumber?: string;
+    companyId?: string;
 }
 
 export default User;

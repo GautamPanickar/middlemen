@@ -26,10 +26,7 @@ describe('The SubscriptionService', () => {
             it('should return the subscription', () => {
                 const subscription: Subscription = {
                     _id: 'userid123456',
-                    company: 'Synnefx',
                     email: 'synnefx@s.com',
-                    gstNumber: 'GA123',
-                    companyId: 'efsfsg',
                     activated: true,
                     details: undefined,
                     user_id: 'user1234'
@@ -48,10 +45,7 @@ describe('The SubscriptionService', () => {
             it('should not return an error', () => {
                 const subscription: SubscriptionDTO = {
                     id: 'userid123456',
-                    company: 'Synnefx',
                     email: 'synnefx@s.com',
-                    gstNumber: 'GA123',
-                    companyId: 'efsfsg',
                     activated: false,
                     details: undefined,
                     user_id: 'user1234'

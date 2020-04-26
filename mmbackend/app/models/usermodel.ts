@@ -20,7 +20,10 @@ const UserSchema: Schema = new Schema({
     password: String,
     activated: Boolean,
     activationKey: String,
-    resetKey: String
+    resetKey: String,
+    company: String,
+    gstNumber: String,
+    companyId: String
 }, { timestamps: true});
 
 const UserModel = model<User & Document>('User', UserSchema);

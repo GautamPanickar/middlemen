@@ -32,7 +32,7 @@ class App {
         this.app.use((req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
+            res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE, PATCH');
             if ('OPTIONS' === req.method) {
                 res.sendStatus(200);
             } else {

@@ -8,6 +8,7 @@ import CustomException from '../utils/exceptions/customexception';
 
 class SubscriptionController implements Controller {
     public path: string = '/subscription';
+    public subscriberPath: string = '/subscribers';
     public router: Router =   Router();
     public susbcriptionService = new SubscriptionService();
 

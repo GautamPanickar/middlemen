@@ -9,6 +9,7 @@ import LogoutAction from '../actions/logoutaction';
 import LoadUserAction from '../actions/loaduseraction';
 import { AppUtils } from '../utilities/apputils';
 import StorageService from '../dataservices/storageservice';
+import UserInfoUpdateAction from '../actions/userinfoupdateaction';
 
 class UserActionCreator {
 
@@ -43,7 +44,9 @@ class UserActionCreator {
             .then((user: User) => {
                 new UserRegistrationAction(user);
             }).catch((error: AJAXError) => {
-                new AlertAction(error.data.message);
+                if (error && error.data) {
+                    new AlertAction(error.data.message);
+                }
             });
     }
 
@@ -71,6 +74,37 @@ class UserActionCreator {
                     // handle error via popup
                 });
         }
+    }
+
+    /**
+     * Update user information.
+     * @param id 
+     * @param user 
+     * @param field 
+     */
+    public static updateUserInfo(id: string, user: User, field: string): void {
+        UserDataService.updateInfo(id, user, field)
+            .then((user: User) => {
+                new UserInfoUpdateAction(user);
+            }).catch((error: AJAXError) => {
+                if (error && error.data) {
+                    new AlertAction(error.data.message);
+                }
+            });
+    }
+
+    /***
+     * Updates the user
+     */
+    public static update(user: User): void {
+        UserDataService.update(user)
+            .then((user: User) => {
+                new UserInfoUpdateAction(user);
+            }).catch((error: AJAXError) => {
+                if (error && error.data) {
+                    new AlertAction(error.data.message);
+                }
+            });
     }
 }
 

@@ -26,7 +26,7 @@ describe('The UserService', () => {
     describe('when finding a user', () => {
         describe('if there is data', () => {
             it('should return a single user', () => {
-                const user: User = {_id: 'userid123456'};
+                const user: User = {_id: 'userid123456', company: 'Heir Ltd', companyId: 'adsa-3647-odf'};
                 (typeorm as any).getRepository.mockReturnValue({
                     findById: () => Promise.resolve(user)
                 });

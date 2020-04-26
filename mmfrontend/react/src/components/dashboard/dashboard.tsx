@@ -7,7 +7,7 @@ import { InvoiceDashItem } from './invoicedashitem';
 import { SubscriptionHelper } from '../../helpers/subscriptionhelper';
 import SubscriptionActionCreator from '../../actioncreators/subscriptionactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
-import { SusbcriberInfoBox } from './subscriberinfobox';
+import { SubscriberInfoBox } from './subscriberinfobox';
 import { Breadcrumb } from '../common/breadcrumb';
 import { SubscripitonView } from '../subscription/subscriptionview';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
@@ -66,7 +66,7 @@ export class Dashboard extends React.Component<Props, State> {
                                 : <></>
                         }
                         {
-                            // this.state.showBreadCrumb ? <Breadcrumb id={'breadCrumbHolder'} key={'key-breadCrumbHolder'} /> : <></>
+                            this.state.showBreadCrumb ? <Breadcrumb id={'breadCrumbHolder'} key={'key-breadCrumbHolder'} /> : <></>
                         }                        
                         <div className='m-1 dash-box-heading'>
                             <h1 className='display-4 font-weight-light'>{this.activeScreenHeading}</h1>
@@ -79,7 +79,7 @@ export class Dashboard extends React.Component<Props, State> {
                                 </div>
                             </div>
                             <div className='col-lg-3 col-md-3 dashboard-subscriber-info right-panel-separator'>
-                                <SusbcriberInfoBox billingAddressOnly={false}/>
+                                <SubscriberInfoBox billingAddressOnly={false}/>
                             </div>
                         </div>
                     </div>

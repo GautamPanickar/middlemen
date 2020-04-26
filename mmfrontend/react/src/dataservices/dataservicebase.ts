@@ -52,13 +52,15 @@ class DataServiceBase {
     /**
      * Makes an AJAX Patch request to the server for performing light-weight updates.
      * @param url 
+     * @param data 
      * @param params 
      */
-    public makeAJAXPatchRequest(url: string, params?: string[]): Promise<any> {
+    public makeAJAXPatchRequest(url: string, data?: any, params?: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
             axios({
                 method: 'patch',
-                url: url
+                url: url,
+                data: data
             })
             .then((response: AJAXResponse) => {
                 resolve(response);

@@ -10,6 +10,7 @@ import Subscription from '../types/user/subscription';
 import StorageService from '../dataservices/storageservice';
 import { AppUtils } from '../utilities/apputils';
 import LoadUserAction from '../actions/loaduseraction';
+import UserInfoUpdateAction from '../actions/userinfoupdateaction';
 
 export class UserStore extends EventEmitter {
     // Store variables
@@ -24,6 +25,7 @@ export class UserStore extends EventEmitter {
     public static USER_SUBSCRIPTIONS_LOADED_EVENT: string = 'UserSubscriptionsLoadedEvent';
     public static LOGOUT_EVENT: string = 'LogoutEvent';
     public static USER_DETAILS_LOADED_EVENT: string = 'UserDetailsLoadedEvent';
+    public static USER_INFO_UPDATED_EVENT: string = 'UserInfoUpdatedEvent';
 
     constructor() {
         super();
@@ -55,6 +57,7 @@ export class UserStore extends EventEmitter {
                 this._loggedInUser = regAction.user;
                 if (this._loggedInUser) {
                     this.emit(UserStore.USER_REGISTRATION_SUCCESSFUL_EVENT);
+                    this.emit(UserStore.LOGOUT_EVENT);
                 } else {
                     this.emit(UserStore.USER_REGISTRATION_UNSUCCESSFUL_EVENT);
                 }                
@@ -70,6 +73,11 @@ export class UserStore extends EventEmitter {
                     this._loggedInUser = loadUserAction.user;
                 }
                 this.emit(UserStore.USER_DETAILS_LOADED_EVENT);
+                break;
+            case ActionType.USER_INFO_UPDATED_ACTION:
+                const infoAction = action as UserInfoUpdateAction;
+                this._loggedInUser = infoAction.user;
+                this.emit(UserStore.USER_INFO_UPDATED_EVENT);
                 break;
         }
     }

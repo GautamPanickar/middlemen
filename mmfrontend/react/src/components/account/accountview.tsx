@@ -32,7 +32,10 @@ export class AccountView extends React.Component<Props, State> {
                 <div className='row'>
                     <div className='col'>
                         {this.name}
+                        <hr/>
                         {this.email}
+                        {this.company}
+                        {this.companyId}
                         {this.phone}
                         {this.gst}
                     </div>
@@ -63,9 +66,41 @@ export class AccountView extends React.Component<Props, State> {
 
     private get email(): JSX.Element {
         return AppUtils.isNotEmpty(this.currentSubscriber.name)
-            ?   <div>
-                    <p className='m-0 font-weight-light'>Email</p>
-                    <h3 className='font-weight-normal'>{this.currentSubscriber.email}</h3>
+            ?   <div className='row'>
+                    <span className='col'>
+                        <p className='m-0 font-weight-light float-left'>Email</p>
+                    </span>
+                    <span className='col'>
+                        <h5 className='font-weight-normal float-right'>{this.currentSubscriber.email}</h5>
+                    </span>
+                </div>
+            :   <></>;
+
+    }
+
+    private get company(): JSX.Element {
+        return AppUtils.isNotEmpty(this.currentSubscriber.company)
+            ?   <div className='row'>
+                    <span className='col'>
+                        <p className='m-0 font-weight-light float-left'>Company</p>
+                    </span>
+                    <span className='col'>
+                        <h5 className='font-weight-normal float-right'>{this.currentSubscriber.company}</h5>
+                    </span>
+                </div>
+            :   <></>;
+
+    }
+
+    private get companyId(): JSX.Element {
+        return AppUtils.isNotEmpty(this.currentSubscriber.companyId)
+            ?   <div className='row'>
+                    <span className='col'>
+                        <p className='m-0 font-weight-light float-left'>Company Unique ID</p>
+                    </span>
+                    <span className='col'>
+                        <h5 className='font-weight-normal float-right'>{this.currentSubscriber.companyId}</h5>
+                    </span>
                 </div>
             :   <></>;
 
@@ -73,18 +108,26 @@ export class AccountView extends React.Component<Props, State> {
 
     private get phone(): JSX.Element {
         return AppUtils.isNotEmpty(this.currentSubscriber.name) && this.currentSubscriber.contactAddress
-            ?   <div>
-                    <p className='m-0 font-weight-light'>Phone</p>
-                    <h3 className='font-weight-normal'>{this.currentSubscriber.contactAddress.phone}</h3>
+            ?   <div className='row'>
+                    <span className='col'>
+                        <p className='m-0 font-weight-light float-left'>Phone</p>
+                    </span>
+                    <span className='col'>
+                        <h5 className='font-weight-normal float-right'>{this.currentSubscriber.contactAddress.phone}</h5>
+                    </span>
                 </div>
             :   <></>;
     }
 
     private get gst(): JSX.Element {
         return AppUtils.isNotEmpty(this.currentSubscriber.gstNumber)
-            ?   <div>
-                    <p className='m-0 font-weight-light'>GST Number</p>
-                    <h3 className='font-weight-normal'>{this.currentSubscriber.gstNumber}</h3>
+            ?   <div className='row'>
+                    <span className='col'>
+                        <p className='m-0 font-weight-light float-left'>GST Number</p>
+                    </span>
+                    <span className='col'>
+                        <h5 className='font-weight-normal float-right'>{this.currentSubscriber.gstNumber}</h5>
+                    </span>
                 </div>
             :   <></>;
     }
