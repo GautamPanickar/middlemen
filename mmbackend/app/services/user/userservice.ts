@@ -33,7 +33,30 @@ class UserService {
     */
     public async saveUser(dto: UserDTO) {
         try {
-            const model = new UserModel(dto);
+            const userToUpdate: User = await this.findById(dto._id);
+            userToUpdate.name = dto.name;
+            userToUpdate.company =  dto.company;
+            userToUpdate.email = dto.email;
+            userToUpdate.gstNumber = dto.gstNumber;
+            userToUpdate.billingAddress = {
+                line1: dto.billingAddress.line1,
+                country: dto.billingAddress.country,
+                state: dto.billingAddress.state,
+                city: dto.billingAddress.city,
+                zipCode: dto.billingAddress.zipCode,
+                phone: dto.billingAddress.phone,
+                email: dto.billingAddress.email
+            };
+            userToUpdate.contactAddress = {
+                line1: dto.contactAddress.line1,
+                country: dto.contactAddress.country,
+                state: dto.contactAddress.state,
+                city: dto.contactAddress.city,
+                zipCode: dto.contactAddress.zipCode,
+                phone: dto.contactAddress.phone,
+                email: dto.contactAddress.email
+            };
+            const model = new UserModel(userToUpdate);
             const updatedUser: User = await model.save();
             return updatedUser;
         } catch (error) {

@@ -3,7 +3,7 @@ import SubscriptionDTO from 'dtos/subscription/susbcriptiondto';
 import AuthorityDTO from './authoritydto';
 
 export interface UserDTO {
-  id?: string;
+  _id?: string;
   name: string;
   email: string;
   password?: string;

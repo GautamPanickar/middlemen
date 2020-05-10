@@ -20,10 +20,8 @@ class UserManager {
     public async updateUser(dto: UserDTO): Promise<User> {
         const errors: string[] = this.validateUser(dto);
         if (errors.length > 0) {
-            throw new CustomException('Validation error while updating user', errors);
+            throw new CustomException(errors.toString());
         } else {
-            const existingUser: User = await this.userService.findById(dto.id);
-            dto.password = existingUser.password;
             return await this.userService.saveUser(dto);
         }
     }

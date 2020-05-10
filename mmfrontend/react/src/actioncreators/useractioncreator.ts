@@ -100,10 +100,8 @@ class UserActionCreator {
         UserDataService.update(user)
             .then((user: User) => {
                 new UserInfoUpdateAction(user);
-            }).catch((error: AJAXError) => {
-                if (error && error.data) {
-                    new AlertAction(error.data.message);
-                }
+            }).catch((error: any) => {
+                new AlertAction(error.toString());
             });
     }
 }

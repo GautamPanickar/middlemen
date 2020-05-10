@@ -3,10 +3,7 @@ import { AppUtils } from '../../utilities/apputils';
 import { AlertBox } from '../common/alertbox';
 import UserActionCreator from '../../actioncreators/useractioncreator';
 import UserHelper from '../../helpers/userhelper';
-import UserStoreInstance from '../../stores/userstore';
-import { UserStore } from '../../stores/userstore';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
-import GenericStoreInstance from '../../stores/genericstore';
 import { GenericModal } from '../common/genericmodal';
 
 interface Props {
@@ -33,8 +30,6 @@ export class Login extends React.Component<Props, State> {
         this.requestResetPassword = this.requestResetPassword.bind(this);
         this.register = this.register.bind(this);
         this.onAlertHide = this.onAlertHide.bind(this);
-        this.onSuccessfulLogin = this.onSuccessfulLogin.bind(this);
-        this.onFailedLogin = this.onFailedLogin.bind(this);
     }
 
     public render() {
@@ -83,16 +78,6 @@ export class Login extends React.Component<Props, State> {
             <GenericModal id='loginFormLoaderModal' key='key-loginFormLoaderModal' />
             </>
         );
-    }
-
-    public componentDidMount() {
-        UserStoreInstance.addListener(UserStore.LOGIN_SUCCESSFUL, this.onSuccessfulLogin);
-        UserStoreInstance.addListener(UserStore.LOGIN_UNSUCCESSFUL, this.onFailedLogin);
-    }
-
-    public componentWillUnmount() {
-        UserStoreInstance.removeListener(UserStore.LOGIN_SUCCESSFUL, this.onSuccessfulLogin);
-        UserStoreInstance.removeListener(UserStore.LOGIN_UNSUCCESSFUL, this.onFailedLogin);
     }
 
     /**
@@ -144,23 +129,5 @@ export class Login extends React.Component<Props, State> {
 
     private onAlertHide = () => {
         // Do something if needed.
-    }
-
-    /**
-     * After successful login or authentication
-     */
-    private onSuccessfulLogin = () => {
-        // if (GenericStoreInstance.hasOverlay) {
-        //     GenericActionCreator.toggleOverlay(false);
-        // }
-    }
-
-    /**
-     * On authentication failure.
-     */
-    private onFailedLogin = () => {
-        // if (GenericStoreInstance.hasOverlay) {
-        //     GenericActionCreator.toggleOverlay(false);
-        // }
     }
 }

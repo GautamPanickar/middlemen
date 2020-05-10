@@ -71,7 +71,6 @@ export class SubscriptionHelper {
      */
     public static getSubscriberAddress(address: Address): string {
         return (
-            '<p class="mb-0">' +
             address.line1 +
             ', ' +
             address.city +
@@ -81,11 +80,8 @@ export class SubscriptionHelper {
             ', ' +
             address.state +
             ', ' +
-            address.country +
-            '</p>' +
-            '<p class="m-0 font-weight-light"><small><i class="fas fa-envelope"></i> ' +
-            address.email +
-            '</small></p> '
+            address.country + ', ' +
+            address.email
         );
     }
 

@@ -12,46 +12,14 @@ import SelectorOption from '../typings/selectoroption';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
 import { Address } from '../../types/user/address';
+import { AccountForm } from './accountform';
+import { GenericModal } from '../common/genericmodal';
 
 interface Props extends PropsBase {
 
 }
 
-interface State {
-    nameError: string;
-    name: string;
-    companyError: string;
-    company: string;
-    emailError: string;
-    email: string;
-    phoneError: string;
-    phone: string;
-    sameAddress: boolean;
-    bAddressError: string,
-    baCountryError: string;
-    baStateError: string;
-    baCityError: string;
-    baZipError: string; 
-    baCountry: string;
-    baState: string;
-    baCity: string;
-    bAddress: string;
-    baZip: string;
-    caZip: string;
-    cAddressError: string,
-    caCountryError: string;
-    caStateError: string;
-    caCityError: string;
-    caZipError: string;
-    caCountry: string;
-    caState: string;
-    caCity: string;
-    cAddress: string;
-    gstError: string;
-    gst: string;
-}
-
-export class AccountEdit extends React.Component<Props, State> {
+export class AccountEdit extends AccountForm {
     private mutableUser: User;
 
     constructor(props: Props) {
@@ -114,147 +82,158 @@ export class AccountEdit extends React.Component<Props, State> {
 
     public render() {
         return (
-            <div id={this.props.id} key={this.props.key} className='box box-shadow dashboard-box bg-light'>
-                <div className='dash-box-heading mt-1'>
-                    <h4 className='font-weight-light'>Subscriber information</h4>
-                    <hr/>
-                </div>
-                <div className='row'>
-                    <div className='col'>
-                        <AlertBox id='accountFormAlertBox'
-                                key='key-accountFormAlertBox'
-                                onHideCallBack={this.onAlertHide}/>
-                        <form className='form'>
-                            <div className='form-row'>
-                                <TextField id='nameField' key='key-nameField' className='col-md-6'
-                                    type='Text' labelName='Your name' name='name' borderless={true}
-                                    defaultValue={this.currentSubscriber.name}
-                                    error={this.state.nameError}
-                                    onValueChange={this.handleNameChange}/>
-                                <TextField id='companyField' key='key-companyField' className='col-md-6'
-                                    type='Text' labelName="Company's Name" name='companyName' borderless={true}
-                                    defaultValue={this.currentSubscriber.company}
-                                    error={this.state.companyError}
-                                    onValueChange={this.handleCompanyChange}/>
-                            </div>
-                            <div className='form-row'>
-                                <TextField id='emailField' key='key-emailField' className='col-md-6'
-                                    type='Email' labelName='Email' name='email' borderless={true}
-                                    error={this.state.emailError}
-                                    defaultValue={this.currentSubscriber.email}
-                                    onValueChange={this.handleEmailChange}/>
-                                <TextField id='phoneField' key='key-phoneField' className='col-md-6'
-                                    type='Text' labelName="Phone" name='phone' borderless={true}
-                                    defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.phone : ''}
-                                    error={this.state.phoneError}
-                                    onValueChange={this.handlePhoneChange}/>
-                            </div>
-                            <div className='row'>
-                                <div className={this.state.sameAddress ? 'col-md-12' : 'col-md-6'}>
-                                    <div className='card'>
-                                        <div className='card-header'>
-                                            <h6 className='font-weight-light'>Billing Address</h6>
-                                        </div>
-                                        <div className='card-body'>
-                                            <TextArea id='billigAddressTA' key='key-billigAddressTA'
-                                                rows={3}
-                                                labelName='Billing Address' name='billingAddress' borderless={false}
-                                                defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.line1 : ''}
-                                                error={this.state.bAddressError}
-                                                onValueChange={this.handleBAddressChange}/>
-                                                                                            
-                                            <div className='form-row'>
-                                                <Selector id='countrySelector' key='key-countrySelector' className='col-md-6'
-                                                    borderless={false} labelName='Country' name='countries'
-                                                    defaultValue={this.currentSubscriber.billingAddress ? this.getDefaultCountry('Billing') : undefined}
-                                                    error={this.state.baCountryError}
-                                                    onValueChange={this.handleBACountryChange} 
-                                                    options={AppUtils.mapConstantsToSelector(Constants.COUNTRIES)} />
-                                                <Selector id='stateSelector' key='key-stateSelector' className='col-md-6'
-                                                    borderless={false} labelName='State' name='states'
-                                                    defaultValue={this.currentSubscriber.billingAddress ? this.getDefaultState('Billing') : undefined}
-                                                    error={this.state.baStateError}
-                                                    onValueChange={this.handleBAStateChange} 
-                                                    options={AppUtils.mapConstantsToSelector(Constants.INDIAN_STATES)} />
+            <>
+                <div id={this.props.id} key={this.props.key} className='box box-shadow dashboard-box bg-light'>
+                    <div className='row'>
+                        <div className='col'>
+                            <AlertBox id='accountFormAlertBox'
+                                    key='key-accountFormAlertBox'
+                                    onHideCallBack={this.onAlertHide}/>
+                            <form className='form'>
+                                <div className='form-row ml-4 mr-4'>
+                                    <TextField id='nameField' key='key-nameField' className='col-md-6'
+                                        type='Text' labelName='Your name' name='name' borderless={true}
+                                        defaultValue={this.currentSubscriber.name}
+                                        error={this.state.nameError}
+                                        onValueChange={this.handleNameChange}/>
+                                    <TextField id='emailField' key='key-emailField' className='col-md-6'
+                                        type='Email' labelName='Email' name='email' borderless={true}
+                                        error={this.state.emailError}
+                                        defaultValue={this.currentSubscriber.email}
+                                        onValueChange={this.handleEmailChange}/>
+                                    
+                                </div>
+                                <div className='form-row ml-4 mr-4'>
+                                    <TextField id='companyField' key='key-companyField' className='col-md-6'
+                                        type='Text' labelName="Company's Name" name='companyName' borderless={true}
+                                        defaultValue={this.currentSubscriber.company}
+                                        error={this.state.companyError}
+                                        onValueChange={this.handleCompanyChange}/>
+                                    <TextField id='phoneField' key='key-phoneField' className='col-md-6'
+                                        type='Text' labelName="Phone" name='phone' borderless={true}
+                                        defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.phone : ''}
+                                        error={this.state.phoneError}
+                                        onValueChange={this.handlePhoneChange}/>
+                                </div>
+                                <div className='form-row ml-4 mr-4'>
+                                    <TextField id='gstField' key='key-gstField' className='col-md-6'
+                                        type='Text' labelName="GST Number" name='gst' borderless={true}
+                                        defaultValue={this.currentSubscriber.gstNumber}
+                                        error={this.state.gstError}
+                                        onValueChange={this.handleGSTChange}/>
+                                </div>
+                                <div className='row'>
+                                    <div className={this.state.sameAddress ? 'col-md-12' : 'col-md-6'}>
+                                        <div className='card'>
+                                            <div className='card-header'>
+                                                <h6>Billing Address</h6>
                                             </div>
-                                            <div className='form-row'>
-                                                <TextField id='baCityField' key='key-baCityField' className='col-md-6'
-                                                    type='Text' labelName="City" name='bacity' borderless={true}
-                                                    defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.city : ''}
-                                                    error={this.state.baCityError}
-                                                    onValueChange={this.handleBACityChange}/>
-                                                <TextField id='baZipField' key='key-baZipField' className='col-md-6'
-                                                    type='Text' labelName="PIN Code" name='baZip' borderless={true}
-                                                    defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.zipCode : ''}
-                                                    error={this.state.baZipError}
-                                                    onValueChange={this.handleBAZipChange}/>
-                                                <Checkbox id='sameAddressField' key='key-sameAddressField'
-                                                    labelName="My contact and billing addresses are the same" name='sameAddress'
-                                                    defaultValue={this.state.sameAddress}
-                                                    onValueChange={this.handleSameAddressChange}/>
+                                            <div className='card-body'>
+                                                <div className='form-row'>
+                                                    <div className={this.state.sameAddress ? 'col' : 'col-md-12 pr-1 pl-1'}>
+                                                        <TextArea id='billigAddressTA' key='key-billigAddressTA'
+                                                            rows={this.state.sameAddress ? 5 : 3}
+                                                            labelName='Address' name='billingAddress' borderless={false}
+                                                            defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.line1 : ''}
+                                                            error={this.state.bAddressError}
+                                                            onValueChange={this.handleBAddressChange}/>
+                                                    </div>
+                                                    <div className={'col' + (this.state.sameAddress ? '' : ' pr-1 pl-1')}>
+                                                        <div className={this.state.sameAddress ? '' : 'form-row'}>
+                                                            <Selector id='countrySelector' key='key-countrySelector' className='col'
+                                                                borderless={false} labelName='Country' name='countries'
+                                                                defaultValue={this.currentSubscriber.billingAddress ? this.getDefaultCountry('Billing') : undefined}
+                                                                error={this.state.baCountryError}
+                                                                onValueChange={this.handleBACountryChange} 
+                                                                options={AppUtils.mapConstantsToSelector(Constants.COUNTRIES)} />
+                                                            <Selector id='stateSelector' key='key-stateSelector' className='col'
+                                                                borderless={false} labelName='State' name='states'
+                                                                defaultValue={this.currentSubscriber.billingAddress ? this.getDefaultState('Billing') : undefined}
+                                                                error={this.state.baStateError}
+                                                                onValueChange={this.handleBAStateChange} 
+                                                                options={AppUtils.mapConstantsToSelector(Constants.INDIAN_STATES)} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='form-row'>
+                                                    <TextField id='baCityField' key='key-baCityField' className='col-md-6'
+                                                        type='Text' labelName="City" name='bacity' borderless={true}
+                                                        defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.city : ''}
+                                                        error={this.state.baCityError}
+                                                        onValueChange={this.handleBACityChange}/>
+                                                    <TextField id='baZipField' key='key-baZipField' className='col-md-6'
+                                                        type='Text' labelName="PIN Code" name='baZip' borderless={true}
+                                                        defaultValue={this.currentSubscriber.billingAddress ? this.currentSubscriber.billingAddress.zipCode : ''}
+                                                        error={this.state.baZipError}
+                                                        onValueChange={this.handleBAZipChange}/>
+                                                    <Checkbox id='sameAddressField' key='key-sameAddressField'
+                                                        labelName="My contact and billing addresses are the same" name='sameAddress'
+                                                        defaultValue={this.state.sameAddress}
+                                                        onValueChange={this.handleSameAddressChange}/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                {
-                                    !this.state.sameAddress
-                                    ?   <div className='col-md-6'>
-                                            <div className='card'>
-                                                <div className='card-header'>
-                                                    <h6 className='font-weight-light'>Contact Address</h6>
-                                                </div>
-                                                <div className='card-body'>
-                                                    <TextArea id='contactAddressTA' key='key-contactAddressTA'
-                                                        rows={3} labelName='Contact Address' name='contactAddress' borderless={false}
-                                                        defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.line1 : ''}
-                                                        error={this.state.cAddressError}
-                                                        onValueChange={this.handleCAddressChange}/>                
-                                                    <div className='form-row'>
-                                                        <Selector id='ccountrySelector' key='key-ccountrySelector' className='col-md-6'
-                                                            borderless={false} labelName='Country' name='ccountries'
-                                                            defaultValue={this.currentSubscriber.contactAddress ? this.getDefaultCountry('Contact') : undefined}
-                                                            error={this.state.caCountryError}
-                                                            onValueChange={this.handleCACountryChange} 
-                                                            options={AppUtils.mapConstantsToSelector(Constants.COUNTRIES)} />
-                                                        <Selector id='cstateSelector' key='key-cstateSelector' className='col-md-6'
-                                                            borderless={false} labelName='State' name='cstates'
-                                                            defaultValue={this.currentSubscriber.contactAddress ? this.getDefaultState('Contact') : undefined}
-                                                            error={this.state.caStateError}
-                                                            onValueChange={this.handleCAStateChange} 
-                                                            options={AppUtils.mapConstantsToSelector(Constants.INDIAN_STATES)} />
+                                    {
+                                        !this.state.sameAddress
+                                        ?   <div className='col-md-6'>
+                                                <div className='card'>
+                                                    <div className='card-header'>
+                                                        <h6>Contact Address</h6>
                                                     </div>
-                                                    <div className='form-row'>
-                                                        <TextField id='caCityField' key='key-caCityField' className='col-md-6'
-                                                            type='Text' labelName="City" name='cacity' borderless={true}
-                                                            defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.city : ''}
-                                                            error={this.state.caCityError}
-                                                            onValueChange={this.handleCACityChange}/> 
-                                                        <TextField id='caZipField' key='key-caZipField' className='col-md-6'
-                                                            type='Text' labelName="PIN Code" name='caZip' borderless={true}
-                                                            defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.zipCode : ''}
-                                                            error={this.state.caZipError}
-                                                            onValueChange={this.handleCAZipChange}/>
+                                                    <div className='card-body'>
+                                                        <TextArea id='contactAddressTA' key='key-contactAddressTA'
+                                                            rows={3} labelName='Address' name='contactAddress' borderless={false}
+                                                            defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.line1 : ''}
+                                                            error={this.state.cAddressError}
+                                                            onValueChange={this.handleCAddressChange}/>                
+                                                        <div className='form-row'>
+                                                            <Selector id='ccountrySelector' key='key-ccountrySelector' className='col-md-6'
+                                                                borderless={false} labelName='Country' name='ccountries'
+                                                                defaultValue={this.currentSubscriber.contactAddress ? this.getDefaultCountry('Contact') : undefined}
+                                                                error={this.state.caCountryError}
+                                                                onValueChange={this.handleCACountryChange} 
+                                                                options={AppUtils.mapConstantsToSelector(Constants.COUNTRIES)} />
+                                                            <Selector id='cstateSelector' key='key-cstateSelector' className='col-md-6'
+                                                                borderless={false} labelName='State' name='cstates'
+                                                                defaultValue={this.currentSubscriber.contactAddress ? this.getDefaultState('Contact') : undefined}
+                                                                error={this.state.caStateError}
+                                                                onValueChange={this.handleCAStateChange} 
+                                                                options={AppUtils.mapConstantsToSelector(Constants.INDIAN_STATES)} />
+                                                        </div>
+                                                        <div className='form-row'>
+                                                            <TextField id='caCityField' key='key-caCityField' className='col-md-6'
+                                                                type='Text' labelName="City" name='cacity' borderless={true}
+                                                                defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.city : ''}
+                                                                error={this.state.caCityError}
+                                                                onValueChange={this.handleCACityChange}/> 
+                                                            <TextField id='caZipField' key='key-caZipField' className='col-md-6'
+                                                                type='Text' labelName="PIN Code" name='caZip' borderless={true}
+                                                                defaultValue={this.currentSubscriber.contactAddress ? this.currentSubscriber.contactAddress.zipCode : ''}
+                                                                error={this.state.caZipError}
+                                                                onValueChange={this.handleCAZipChange}/>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    :   <></>
-                                }
-                            </div>
-                            <TextField id='gstField' key='key-gstField' className='col-md-6'
-                                type='Text' labelName="GST Number" name='gst' borderless={true}
-                                error={this.state.gstError}
-                                onValueChange={this.handleGSTChange}/>
-                            <a href='javascript:void(0);' className='btn btn-success' onClick={this.onUpdate}>Update Information</a>
-                        </form>
+                                        :   <></>
+                                    }
+                                </div>
+                                <div className='text-center mt-3 mb-3'>
+                                    <a href='javascript:void(0);' className='btn btn-success' onClick={this.onUpdate}>Update Information</a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <GenericModal id='userUpdateLoaderModal' key='key-userUpdateLoaderModal' />
+            </>
         );
     }
 
     private onUpdate(): void {
         this.setState({
+            bAddressError: '',
             baCountryError:'',
             baStateError:'',
             baCityError:'',
@@ -270,7 +249,7 @@ export class AccountEdit extends React.Component<Props, State> {
             phoneError: '',
             gstError: ''
         });
-        if (this.validateRegistrationForm()) {
+        if (this.validateUpdateForm()) {
             GenericActionCreator.toggleOverlay(true, true);
             UserActionCreator.update(this.userToSave);
         }
@@ -300,22 +279,14 @@ export class AccountEdit extends React.Component<Props, State> {
 
     private get contactAddressToSave(): Address {
         return {
-            line1: this.state.sameAddress ? this.state.bAddress : this.state.cAddress,
-            city: this.state.sameAddress ? this.state.baCity : this.state.caCity,
-            state: this.state.sameAddress ? this.state.baState :  this.state.caState,
-            country: this.state.sameAddress ? this.state.baCountry : this.state.caCountry,
+            line1: this.state.cAddress,
+            city: this.state.caCity,
+            state: this.state.caState,
+            country: this.state.caCountry,
             email: this.state.email,
             phone: this.state.phone,
-            zipCode: this.state.sameAddress ? this.state.baZip : this.state.caZip
+            zipCode: this.state.caZip
         }
-    }
-
-    /**
-     * Validates the subscriber update form.
-     */
-    private validateRegistrationForm(): boolean {
-        // return this.isNameValid && this.isCompanyValid && this.isEmailValid && this.isPasswordValid && this.state.plan !== undefined;
-        return true;
     }
 
     private onAlertHide(): void {
@@ -347,32 +318,42 @@ export class AccountEdit extends React.Component<Props, State> {
     }
 
     private handleBAddressChange(value: string): void {
+        const that = this;
         this.setState({
-            bAddress: value
+            bAddress: value,
+            cAddress: that.state.sameAddress ? value : ''
         });
     }
 
     private handleBACountryChange(value: SelectorOption): void {
+        const that = this;
         this.setState({
-            baCountry: value.value
+            baCountry: value.value,
+            caCountry: that.state.sameAddress ? value.value : ''
         });
     }
         
     private handleBAStateChange(value: SelectorOption): void {
+        const that = this;
         this.setState({
-            baState: value.value
+            baState: value.value,
+            caState: that.state.sameAddress ? value.value : ''
         });
     }
     
     private handleBACityChange(value: string): void {
+        const that = this;
         this.setState({
-            baCity: value
+            baCity: value,
+            caCity: that.state.sameAddress ? value : ''
         });
     }
     
     private handleBAZipChange(value: string): void {
+        const that = this;
         this.setState({
-            baZip: value
+            baZip: value,
+            caZip: that.state.sameAddress ? value : ''
         });
     }
         

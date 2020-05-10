@@ -137,7 +137,7 @@ export class AccountView extends React.Component<Props, State> {
             ?   <div className='mt-1'>
                     <p className='m-0 font-weight-light'>Contact Address</p>
                     <div className='border p-2'>
-                        <h5 className='font-weight-normal'>{SubscriptionHelper.getSubscriberAddress(this.currentSubscriber.contactAddress)}</h5>
+                        <h6 className='font-weight-normal'>{SubscriptionHelper.getSubscriberAddress(this.currentSubscriber.contactAddress)}</h6>
                     </div>
                 </div>
             :   <></>;
@@ -148,7 +148,7 @@ export class AccountView extends React.Component<Props, State> {
             ?   <div className='mt-1'>
                     <p className='m-0 font-weight-light'>Billing Address</p>
                     <div className='border p-2'>
-                        <h5 className='font-weight-normal'>{SubscriptionHelper.getSubscriberAddress(this.currentSubscriber.billingAddress)}</h5>
+                        <h6 className='font-weight-normal'>{SubscriptionHelper.getSubscriberAddress(this.currentSubscriber.billingAddress)}</h6>
                     </div>
                 </div>
             :   <></>;

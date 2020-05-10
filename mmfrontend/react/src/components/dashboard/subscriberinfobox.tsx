@@ -282,7 +282,7 @@ export class SubscriberInfoBox extends React.Component<Props, State> {
      */
     private getAddressAsHTML(address: Address): any {
         return {
-            _html: SubscriptionHelper.getSubscriberAddress(address)
+            __html: SubscriptionHelper.getSubscriberAddress(address)
         };
     }
 

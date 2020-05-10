@@ -37,7 +37,7 @@ export class Checkbox extends React.Component<Props, State> {
                         required={this.props.required}
                         checked={this.state.defaultValue ? this.state.defaultValue : this.state.value}
                         onChange={this.handleValueChange}/>
-                    <label className='custom-control-label' htmlFor={this.props.name}>{this.props.labelName}My contact and billing addresses are the same</label>
+                    <label className='custom-control-label' htmlFor={this.props.name}>{this.props.labelName}</label>
                 </div>
                 {AppUtils.isNotEmpty(this.props.error)
                         ? <small className='form-text text-danger'>{this.props.error}</small>

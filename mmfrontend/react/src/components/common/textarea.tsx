@@ -55,6 +55,16 @@ export class TextArea extends React.Component<Props, State> {
         }
     }
 
+    public componentDidMount() {
+        // Once the component is mounted, if there is a default vlaue then the state wil have to be updated with it.
+        const valueToUpdate = this.state.defaultValue;
+        if (AppUtils.isNotEmpty(this.state.defaultValue)) {
+            this.setState({
+                value: valueToUpdate
+            });
+        }
+    }
+
     /**
      * On textfield value change. This happens when you type something on to the textfield.
      * @param event 

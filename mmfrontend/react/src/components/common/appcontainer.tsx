@@ -39,7 +39,7 @@ export class AppContainer extends React.Component<Props, State> {
             {
                 UserStoreInstance.isLoggedIn || this.state.showDashboard
                     ? <Dashboard id={'userDashboard'} key={'key-userDashboard'}/>
-                    : (this.state.showRegistration ? <Registration /> : <Login />)
+                    : (this.state.showRegistration ? <Registration id={'userRegistration'} key={'key-userRegistration'}/> : <Login />)
             }
             </ContainerErrorBoundary>
         );

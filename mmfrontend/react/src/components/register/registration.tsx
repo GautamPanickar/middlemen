@@ -2,8 +2,6 @@ import * as React from 'react';
 import { GenericModal } from '../common/genericmodal';
 import { AlertBox } from '../common/alertbox';
 import { TextField } from '../common/textfield';
-import { AppUtils } from '../../utilities/apputils';
-import UserHelper from '../../helpers/userhelper';
 import { Enums } from '../../utilities/enums';
 import { SubscriptionHelper } from '../../helpers/subscriptionhelper';
 import { PriceBox } from './pricebox';
@@ -11,27 +9,12 @@ import { PlanDisplayInfo } from '../../types/others/plandisplayinfo';
 import { User } from '../../types/user/user';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
+import { AccountForm } from '../account/accountform';
 
-interface Props {
-
+interface Props extends PropsBase {
 }
 
-interface State {
-    nameError: string;
-    companyError: string;
-    emailError: string;
-    passwordError: string;
-    name: string;
-    company: string;
-    email: string;
-    password: string;
-    plan: Enums.SubscriptionPlan;
-    formDisplay?: boolean;
-}
-
-type ErrorType = 'Name' | 'Company' | 'Email' | 'Password';
-
-export class Registration extends React.Component<Props, State> {
+export class Registration extends AccountForm {
     constructor(props: Props) {
         super(props);
 
@@ -199,76 +182,6 @@ export class Registration extends React.Component<Props, State> {
                 }
             }
         };
-    }
-
-    /**
-     * Validates the registration form.
-     */
-    private validateRegistrationForm(): boolean {
-        // Name validation
-        return this.isNameValid && this.isCompanyValid && this.isEmailValid && this.isPasswordValid && this.state.plan !== undefined;
-    }
-
-    private get isNameValid(): boolean {
-        if (AppUtils.isEmpty(this.state.name) ||  this.state.name.length <= 1) {
-            this.setState({
-                nameError: 'A valid name needs to be provided to proceed with registration'
-            });
-            return false;
-        } else if (this.state.name.length > 50) {
-            this.setState({
-                nameError: 'Length of name cannot exceed 50 characters'
-            });
-            return false;
-        }
-        return true;
-    }
-
-    private get isCompanyValid(): boolean {
-        if (AppUtils.isEmpty(this.state.company) ||  this.state.company.length <= 1) {
-            this.setState({
-                companyError: 'A valid company name should be provided'
-            });
-            return false;
-        }  else if (this.state.company.length > 50) {
-            this.setState({
-                companyError: 'Length of comapny name cannot exceed 50 characters'
-            });
-            return false;
-        }
-        return true;
-    }
-
-    private get isEmailValid(): boolean {
-        if (AppUtils.isEmpty(this.state.email) 
-                ||  this.state.email.length <= 1 
-                || !UserHelper.isValidEmail(this.state.email)) {
-            this.setState({
-                emailError: 'A valid email should be provided'
-            });
-            return false;
-        } else if (this.state.email.length > 50) {
-            this.setState({
-                emailError: 'Length of email cannot exceed 50 characters'
-            });
-            return false;
-        }
-        return true;
-    }
-
-    private get isPasswordValid(): boolean {
-        if (AppUtils.isEmpty(this.state.password) ||  this.state.email.length <= 1 ) {
-            this.setState({
-                passwordError: 'You cannot proceed forward until you provide a valid password'
-            });
-            return false;
-        } else if (this.state.password.length > 20) {
-            this.setState({
-                passwordError: 'Password lenght cannot exceed 20 characters'
-            });
-            return false;
-        }
-        return true;
     }
 
     /**
