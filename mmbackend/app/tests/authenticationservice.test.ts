@@ -15,7 +15,8 @@ describe('The AuthenticationService', () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
-                    password: 'srt123'
+                    password: 'srt123',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
                     findOne: () => Promise.resolve(userData)
@@ -30,7 +31,8 @@ describe('The AuthenticationService', () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
-                    password: 'srt123'
+                    password: 'srt123',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
                     findOne: () => Promise.resolve(undefined),
@@ -52,12 +54,14 @@ describe('The AuthenticationService', () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
-                    password: 'srt123'
+                    password: 'srt123',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 const incorrectUserData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
-                    password: 'srt123456'
+                    password: 'srt123456',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
                     findOne: () => Promise.resolve(incorrectUserData)
@@ -72,7 +76,8 @@ describe('The AuthenticationService', () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
-                    password: 'srt123'
+                    password: 'srt123',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
                     findOne: () => Promise.resolve(userData)

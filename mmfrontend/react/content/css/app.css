@@ -90,3 +90,38 @@ a.dashboard-link {
 .breadcrumb {
     background-color: white;
 }
+
+/* Carousel specific styles */
+.carousel > .row {
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+.carousel > .row > .col {
+    display: inline-block;
+    float: none;
+}
+
+/**
+* Scroll bar CSS
+ */
+.custom-scroll ::-webkit-scrollbar-track {
+    box-shadow: none;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+    background-color: white;
+}
+
+.custom-scroll ::-webkit-scrollbar {
+    height: 10px;
+    width: 6px;
+    background-color: #2d4359;
+}
+
+.custom-scroll ::-webkit-scrollbar-thumb {
+    background-color: #6c757d7d;
+}
+
+.custom-scroll ::-webkit-scrollbar-thumb:horizontal{
+    background-color: #6c757d7d;
+    border-radius: 5px;
+}

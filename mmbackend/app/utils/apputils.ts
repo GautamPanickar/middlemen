@@ -114,4 +114,12 @@ export class AppUtils {
             default: return 0;
         }
     }
+
+    /**
+     * Returns a unique plan code.
+     * @param name 
+     */
+    public static getPlanCode(name: string): string {
+        return 'PLAN-' + name.substr(0, 3) + '-' + Math.floor(1000 + Math.random() * 9000);
+    }
 }

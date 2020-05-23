@@ -14,10 +14,10 @@ export const PaymentDashItem = (props: Props) => {
             <div className='dash-box-heading mt-1'>
                 <h4 className='font-weight-light'>Payment</h4>
                 <hr />
-                <h6 className='font-weight-lighter'>Payment details, conformed orders, dues and payment history.</h6>
+                <h6 className='font-weight-lighter'>Payment details, conformed orders, dues and payment/invoice history.</h6>
                 <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={makePayment}>* Make payment</a></h6>
                 <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={history}>* Payment history</a></h6>
-                
+                <h6 className='font-weight-lighter'><a href='javascript:void(0);' className='dashboard-link' onClick={invoiceHistory}>* Invoice history</a></h6>
             </div>
         </div>
     );
@@ -27,6 +27,10 @@ export const PaymentDashItem = (props: Props) => {
     }
 
     function history() {
+
+    }
+
+    function invoiceHistory() {
 
     }
 }

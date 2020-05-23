@@ -26,7 +26,12 @@ describe('The UserService', () => {
     describe('when finding a user', () => {
         describe('if there is data', () => {
             it('should return a single user', () => {
-                const user: User = {_id: 'userid123456', company: 'Heir Ltd', companyId: 'adsa-3647-odf'};
+                const user: User = {
+                    _id: 'userid123456', 
+                    company: 'Heir Ltd', 
+                    companyId: 'adsa-3647-odf',
+                    roles: ['ROLE_SUBSCRIBER']
+                };
                 (typeorm as any).getRepository.mockReturnValue({
                     findById: () => Promise.resolve(user)
                 });
@@ -38,16 +43,20 @@ describe('The UserService', () => {
 
     describe('when saving/updating a user', () => {
         describe('if there is validation error', () => {
-            it('should return error', () => {
+            it('should return error', async () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
-                    email: 'srt@bcci.com'
+                    email: 'srt@bcci.com',
+                    roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
                     save: () => Promise.resolve(undefined)
                 });
-                expect(userManager.updateUser(userData))
-                    .rejects.toMatchObject(new CustomException('Validation error while updating user', []));
+                try {
+                    const user = await userManager.updateUser(userData)
+                } catch(error) {
+                    expect(error).toMatchObject(new CustomException('Contact address needs to be provided,Billing address needs to be provided'));
+                }
             });
         });
     });
@@ -57,6 +66,7 @@ describe('The UserService', () => {
             const userData: UserDTO = {
                 name: 'Sachin Tendular',
                 email: 'srt@bcci.com',
+                roles: ['ROLE_SUBSCRIBER'],
                 contactAddress: {
                     line1: 'BB Tanta',
                     country: 'India',

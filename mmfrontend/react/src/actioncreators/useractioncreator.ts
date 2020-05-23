@@ -104,6 +104,13 @@ class UserActionCreator {
                 new AlertAction(error.toString());
             });
     }
+
+    /**
+     * Loads the subscription plan change section.
+     */
+    public static loadPlanChangeSection(): void {
+        new LoadRegistrationAction();
+    }
 }
 
 export default UserActionCreator;

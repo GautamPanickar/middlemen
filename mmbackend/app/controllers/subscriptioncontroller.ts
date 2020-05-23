@@ -5,12 +5,18 @@ import SubscriptionDTO from '../dtos/subscription/susbcriptiondto';
 import { AppUtils } from '../utils/apputils';
 import Subscription from '../types/subscription/subscription';
 import CustomException from '../utils/exceptions/customexception';
+import PlanDTO from '../dtos/subscription/plandto';
+import Plan from '../types/subscription/plan';
+import UserInfoMiddleware from '../middlewares/base/userinfomiddleware';
+import User from '../types/user/user';
+import SubscriptionManager from '../managers/subscriptionmanager';
 
 class SubscriptionController implements Controller {
     public path: string = '/subscription';
     public subscriberPath: string = '/subscribers';
     public router: Router =   Router();
     public susbcriptionService = new SubscriptionService();
+    public subscriptionManager = new SubscriptionManager();
 
     public constructor() {
         this.initializeRoutes();
@@ -25,6 +31,7 @@ class SubscriptionController implements Controller {
         this.router.get(`${this.path}/user/:id`, this.loadByUser);
         this.router.patch(`${this.path}/:id/activate`, this.activate);
         this.router.patch(`${this.path}/:id/cancel`, this.cancel);
+        this.router.post(`${this.path}/plan`, UserInfoMiddleware, this.savePlan);
     }
 
     /**
@@ -128,6 +135,31 @@ class SubscriptionController implements Controller {
             } else {
                 next(new CustomException('Subscription Id not found'));
             }
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     * API to save the subscription plan - update or new
+     */
+    public savePlan = async(request: Request, response: Response, next: NextFunction) => {
+        const plan: PlanDTO = request.body;
+        const userInfo: User = response.locals.userinfo;
+        try {
+            if (userInfo) {
+                plan.app_id = userInfo.app_id;
+                plan.createdBy = userInfo._id;
+                plan.updatedBy = userInfo._id;
+                const savedPlan: Plan = await this.subscriptionManager.savePlan(plan);
+                return response.send({
+                    'status': 200,
+                    'plan': savedPlan,
+                    'message': 'Subscription plan saved successfully!'
+                });
+            } else {
+                next(new CustomException('User details could not be found'));
+            }            
         } catch (error) {
             next(error);
         }

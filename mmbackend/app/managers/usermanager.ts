@@ -3,8 +3,7 @@ import UserService from '../services/user/userservice';
 import User from '../types/user/user';
 import { AppUtils } from '../utils/apputils';
 import CustomException from '../utils/exceptions/customexception';
-import AuthorityDTO from 'dtos/user/authoritydto';
-import { Enums } from 'utils/enums';
+import { ROLE_SUBSCRIBER } from '../utils/appconstants';
 
 class UserManager {
     public userService: UserService;
@@ -18,31 +17,26 @@ class UserManager {
      * @param dto 
      */
     public async updateUser(dto: UserDTO): Promise<User> {
-        const errors: string[] = this.validateUser(dto);
-        if (errors.length > 0) {
-            throw new CustomException(errors.toString());
-        } else {
-            return await this.userService.saveUser(dto);
+        try {
+            const errors: string[] = this.validateUser(dto);
+            if (errors.length > 0) {
+                throw new CustomException(errors.toString());
+            } else {
+                return await this.userService.saveUser(dto);
+            }
+        } catch (error) {
+            throw error;
         }
     }
 
     /**
-     * Sets the authorities for the user.
+     * Sets the roles for the user.
      * @param dto 
      */
-    public setAuthorities(dto: UserDTO): void {
-        dto.authorities = [];
-        const userAuthority: AuthorityDTO = {
-            code: Enums.Authorities.ROLE_USER,
-            name: 'ROLE_USER'
-        };
-        dto.authorities.push(userAuthority);
+    public setRoles(dto: UserDTO): void {
+        dto.roles = [];
         if (dto.newSubscription) {
-            const subscriberAuthority: AuthorityDTO = {
-                code: Enums.Authorities.ROLE_SUBSCRIBER,
-                name: 'ROLE_SUBSCRIBER'
-            };
-            dto.authorities.push(subscriberAuthority);
+            dto.roles.push(ROLE_SUBSCRIBER);
         }
     }
 

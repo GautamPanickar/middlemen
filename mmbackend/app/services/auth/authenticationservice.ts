@@ -37,7 +37,7 @@ class AuthenticationService {
         // Create the new user and return the token
         let token: TokenData;
         try {
-            this.userManager.setAuthorities(dto);
+            this.userManager.setRoles(dto);
             const createdUser: User = await this.user.create({...dto,
                 password: hashedPassword, 
                 companyId:  AppUtils.uniqueCompanyId,

@@ -23,7 +23,8 @@ const UserSchema: Schema = new Schema({
     resetKey: String,
     company: String,
     gstNumber: String,
-    companyId: String
+    companyId: String,
+    roles: [String]
 }, { timestamps: true});
 
 const UserModel = model<User & Document>('User', UserSchema);

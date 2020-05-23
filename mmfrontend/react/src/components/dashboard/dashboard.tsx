@@ -3,7 +3,7 @@ import UserStoreInstance, { UserStore } from '../../stores/userstore';
 import { PricingDashItem } from './pricingdashitem';
 import { SubscriberDashItem } from './subscriberdashitem';
 import { PaymentDashItem } from './paymentdashitem';
-import { InvoiceDashItem } from './invoicedashitem';
+import { ConfigurationDashItem } from './configurationdashitem';
 import { SubscriptionHelper } from '../../helpers/subscriptionhelper';
 import SubscriptionActionCreator from '../../actioncreators/subscriptionactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
@@ -15,6 +15,7 @@ import BreadcrumbItem from '../../types/others/breadcrumbitem';
 import { SubscripitonChange } from '../subscription/subscriptionchange';
 import { AccountView } from '../account/accountview';
 import { AccountEdit } from '../account/accountedit';
+import { PlanConfiguration } from '../account/admin/planconfiguration';
 
 interface Props extends PropsBase {
 
@@ -43,6 +44,7 @@ export class Dashboard extends React.Component<Props, State> {
         this.onViewAccountClick = this.onViewAccountClick.bind(this);
         this.onEditAccountClick = this.onEditAccountClick.bind(this);
         this.onChangePasswordClick = this.onChangePasswordClick.bind(this);
+        this.onPlanConfigurationClick = this.onPlanConfigurationClick.bind(this);
     }
 
     public render() {
@@ -108,7 +110,8 @@ export class Dashboard extends React.Component<Props, State> {
                         <PaymentDashItem id={'paymentDashItem'} key={'key-paymentDashItem'}/>
                     </div>
                     <div className='col-lg-3 col-md-3'>
-                        <InvoiceDashItem id={'invoiceDashItem'} key={'key-invoiceDashItem'}/>
+                        <ConfigurationDashItem id={'configurationDashItem'} key={'key-configurationDashItem'}
+                            onPlanConfigCallback={this.onPlanConfigurationClick}/>
                     </div>
                 </>);
             case 'SubscriptionView': 
@@ -119,6 +122,8 @@ export class Dashboard extends React.Component<Props, State> {
                 return (<AccountView id={'accountViewBox'} key={'key-accountViewBox'} />);
             case 'AccountEdit':
                 return (<AccountEdit id={'accountEditBox'} key={'key-accountEditBox'} />);
+            case 'PlanConfiguration':
+                return (<PlanConfiguration id={'planConfigurationBox'} key={'key-planConfigurationBox'} />);
         }
     }
 
@@ -134,6 +139,8 @@ export class Dashboard extends React.Component<Props, State> {
                 return 'View account';
             case 'AccountEdit':
                 return 'Edit account';
+            case 'PlanConfiguration':
+                return 'Confgure plans';
         }
     }
 
@@ -248,4 +255,19 @@ export class Dashboard extends React.Component<Props, State> {
             showBreadCrumb: true
         });
     }
+
+    private onPlanConfigurationClick(): void {
+        const item: BreadcrumbItem = {
+            ukey: 'configKEY-00',
+            name: 'Configure Plans',
+            parent: null,
+            active: true
+        };
+        GenericActionCreator.updateBreadCrumb(item, 'PUSH');
+        this.setState({
+            activeScreen: 'PlanConfiguration',
+            showBreadCrumb: true
+        });
+    }
+
 }

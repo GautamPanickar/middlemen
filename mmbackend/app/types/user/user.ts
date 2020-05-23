@@ -1,9 +1,9 @@
 import TokenData from './tokendata';
 import Address from './address';
-import Auhtority from './authoritiy';
 
 interface User {
     _id?: string;
+    app_id?: string;
     name?: string;
     email?: string;
     password?: string;
@@ -13,7 +13,7 @@ interface User {
     resetKey?: string;
     contactAddress?: Address;
     billingAddress?: Address;
-    authorities?: Auhtority[];
+    roles: string[];
     company?: string;
     gstNumber?: string;
     companyId?: string;
