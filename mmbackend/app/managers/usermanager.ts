@@ -3,7 +3,7 @@ import UserService from '../services/user/userservice';
 import User from '../types/user/user';
 import { AppUtils } from '../utils/apputils';
 import CustomException from '../utils/exceptions/customexception';
-import { ROLE_SUBSCRIBER } from '../utils/appconstants';
+import { ROLE_SUBSCRIBER, ROLE_ACCOUNT_ADMIN } from '../utils/appconstants';
 
 class UserManager {
     public userService: UserService;
@@ -37,6 +37,8 @@ class UserManager {
         dto.roles = [];
         if (dto.newSubscription) {
             dto.roles.push(ROLE_SUBSCRIBER);
+        } else if(dto.isApp) {
+            dto.roles.push(ROLE_ACCOUNT_ADMIN);
         }
     }
 
@@ -46,11 +48,15 @@ class UserManager {
      */
     private validateUser(dto: UserDTO): string[] {
         const errors: string[] = [];
+        const isAdminValidation: boolean = AppUtils.isNotEmpty(dto.app_id) || AppUtils.isNotEmpty(dto.appCode); 
         if (AppUtils.isEmpty(dto.name)) {
             errors.push('Name cannot be empty');
         }
         if (AppUtils.isEmpty(dto.email)) {
             errors.push('Email cannot be empty');
+        }
+        if (AppUtils.isEmpty(dto.company)) {
+            errors.push((isAdminValidation ? 'App' : 'Company') + ' name cannot be empty');
         }
         if (!dto.contactAddress) {
             errors.push('Contact address needs to be provided');
@@ -63,7 +69,7 @@ class UserManager {
         } else if (AppUtils.isEmpty(dto.contactAddress.phone)) {
             errors.push('Contact phone number cannot be empty');
         }
-        if (!dto.billingAddress) {
+        if (!isAdminValidation && !dto.billingAddress) {
             errors.push('Billing address needs to be provided');
         } else if (AppUtils.isEmpty(dto.billingAddress.line1)) {
             errors.push('Billing address cannot be empty');

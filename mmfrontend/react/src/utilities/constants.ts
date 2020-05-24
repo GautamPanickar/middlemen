@@ -237,4 +237,8 @@ export namespace Constants {
         'Uttar Pradesh',
         'West Bengal'
     ];
+
+    export const ROLE_SUBSCRIBER = 'ROLE_SUBSCRIBER';
+    export const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    export const ROLE_ACCOUNT_ADMIN = 'ROLE_ACCOUNT_ADMIN';
 }

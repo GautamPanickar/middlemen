@@ -11,6 +11,7 @@ import StorageService from '../dataservices/storageservice';
 import { AppUtils } from '../utilities/apputils';
 import LoadUserAction from '../actions/loaduseraction';
 import UserInfoUpdateAction from '../actions/userinfoupdateaction';
+import { Constants } from '../utilities/constants';
 
 export class UserStore extends EventEmitter {
     // Store variables
@@ -101,6 +102,27 @@ export class UserStore extends EventEmitter {
      */
     public get isLoggedIn(): boolean {
         return AppUtils.isNotEmpty(StorageService.retrieveItem('authenticationtoken'));
+    }
+
+    /**
+     * Checks if the logged in user has super admin role.
+     */
+    public get isSuperAdmin(): boolean {
+        return this._loggedInUser && this._loggedInUser.roles.includes(Constants.ROLE_SUPER_ADMIN);
+    }
+
+    /**
+     * Checks if the logged in user has account admin role.
+     */
+    public get isAccountAdmin(): boolean {
+        return this._loggedInUser && this._loggedInUser.roles.includes(Constants.ROLE_ACCOUNT_ADMIN);
+    }
+
+    /**
+     * Checks if the logged in user has ssubscriber role.
+     */
+    public get isSubscriber(): boolean {
+        return this._loggedInUser && this._loggedInUser.roles.includes(Constants.ROLE_SUBSCRIBER);
     }
 }
 

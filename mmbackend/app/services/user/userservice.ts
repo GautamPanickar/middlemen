@@ -4,11 +4,15 @@ import SomethingWrongException from '../../utils/exceptions/base/somethingwronge
 import User from '../../types/user/user';
 import CustomException from '../../utils/exceptions/customexception';
 import { AppUtils } from '../../utils/apputils';
+import AppDetailsService from './appdetailsservice';
+import AppDetails from 'types/user/appdetails';
 
 class UserService {
     private user = UserModel;
+    private appDetailsService: AppDetailsService;
 
     constructor () {
+        this.appDetailsService = new AppDetailsService();
     }
 
     /**
@@ -38,6 +42,15 @@ class UserService {
             userToUpdate.company =  dto.company;
             userToUpdate.email = dto.email;
             userToUpdate.gstNumber = dto.gstNumber;
+            if (AppUtils.isNotEmpty(dto.app_id) || AppUtils.isNotEmpty(dto.appCode)) {
+                const appDetails: AppDetails =  AppUtils.isNotEmpty(dto.app_id)
+                    ? await this.appDetailsService.findById(dto.app_id)
+                    : await this.appDetailsService.findByCode(dto.appCode);
+                if (appDetails) {
+                    userToUpdate.app_id = appDetails._id;
+                }
+            }
+            userToUpdate.app_id = dto.appCode;
             userToUpdate.billingAddress = {
                 line1: dto.billingAddress.line1,
                 country: dto.billingAddress.country,
@@ -89,6 +102,23 @@ class UserService {
             } else {
                 throw new CustomException('Could not find the user');
             }
+        } catch (error) {
+            throw new SomethingWrongException(error);
+        }
+    }
+
+    /**
+     * Updates the user information with the app information.
+     * @param userId 
+     * @param appId 
+     */
+    public async updateUserAppDetails(userId: string, appId: string): Promise<User> {
+        try {
+            const userToUpdate: User = await this.findById(userId);
+            userToUpdate.app_id = appId;
+            const model = new UserModel(userToUpdate);
+            const updatedUser: User = await model.save();
+            return updatedUser;
         } catch (error) {
             throw new SomethingWrongException(error);
         }

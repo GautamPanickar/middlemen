@@ -17,6 +17,7 @@ interface User {
     company?: string;
     gstNumber?: string;
     companyId?: string;
+    appCode?: string;
 }
 
 export default User;

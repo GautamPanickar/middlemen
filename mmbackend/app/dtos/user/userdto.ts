@@ -19,4 +19,7 @@ export interface UserDTO {
   company?: string;
   gstNumber?: string;
   companyId?: string;
+  isApp?: boolean;
+  app_id?: string;
+  appCode?: string;
 }

@@ -65,6 +65,14 @@ export class AppUtils {
     }
 
     /**
+     * Returns a unique app id.
+     * @returns {string}
+     */
+    public static get uniqueAppId(): string {
+        return 'APP-' + Math.random().toString(36).substr(2, 9) + '-' + Math.floor(1000 + Math.random() * 9000);
+    }
+
+    /**
      * Checks if the country is India
      * @param country 
      */
@@ -121,5 +129,13 @@ export class AppUtils {
      */
     public static getPlanCode(name: string): string {
         return 'PLAN-' + name.substr(0, 3) + '-' + Math.floor(1000 + Math.random() * 9000);
+    }
+
+    /**
+     * Returns a unique app code.
+     * @param name 
+     */
+    public static getAppCode(name: string): string {
+        return 'APP-' + name.substr(0, 3) + '-' + Math.floor(1000 + Math.random() * 9000);
     }
 }

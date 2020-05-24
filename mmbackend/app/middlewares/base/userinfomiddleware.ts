@@ -3,7 +3,7 @@ import Secret from '../../utils/secret';
 import * as JWT from 'jsonwebtoken';
 import TokenData from  '../../types/user/tokendata';
 import UserModel from '../../models/usermodel';
-import CustomException from 'utils/exceptions/customexception';
+import CustomException from '../../utils/exceptions/customexception';
 
 async function UserInfoMiddleware(request: Request, response: Response, next: NextFunction) {
     const cookies = request.cookies;

@@ -10,11 +10,15 @@ import { User } from '../../types/user/user';
 import GenericActionCreator from '../../actioncreators/genericactioncreator';
 import UserActionCreator from '../../actioncreators/useractioncreator';
 import { AccountForm } from '../account/accountform';
+import { AppUtils } from '../../utilities/apputils';
 
 interface Props extends PropsBase {
 }
 
 export class Registration extends AccountForm {
+    
+    private urlDetails: Location;
+
     constructor(props: Props) {
         super(props);
 
@@ -30,6 +34,8 @@ export class Registration extends AccountForm {
             plan: Enums.SubscriptionPlan.PLAN_1,
             formDisplay: true
         };
+
+        this.urlDetails = window.location;
 
         // Bindings
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -47,13 +53,15 @@ export class Registration extends AccountForm {
                 <div className='row justify-content-center fade show'>
                     {
                         this.state.formDisplay ? 
-                        <div className='col-md-8' id='registrationFormHolder'>
+                        <div className={this.formType === 'SubscriberForm' ?  'col-md-8': 'col-md-6' } id='registrationFormHolder'>
                             <div>
-                                <h1 className='display-4 font-weight-light'>Subscriber registration</h1>
+                                <h1 className='display-4 font-weight-light'>
+                                    {this.formType === 'SubscriberForm' ? 'Subscriber registration' : 'App account registration'}
+                                </h1>
                                 <hr />
                             </div>
                             <div className='row'>
-                                <div className='mt-3 col-md-9'>
+                                <div className={'mt-3 ' + (this.formType === 'SubscriberForm' ?  'col-md-9': 'col-md-12')}>
                                     <AlertBox id='registrationFormAlertBox'
                                         key='key-registrationFormAlertBox'
                                         onHideCallBack={this.onAlertHide}/>
@@ -63,7 +71,8 @@ export class Registration extends AccountForm {
                                             error={this.state.nameError}
                                             onValueChange={this.handleNameChange}/>
                                         <TextField id='companyField' key='key-companyField'
-                                            type='Text' labelName="Company's Name" name='companyName' borderless={true}
+                                            type='Text' labelName={this.formType === 'SubscriberForm' ? "Company's Name" : "App's name"}
+                                            name='companyName' borderless={true}
                                             error={this.state.companyError}
                                             onValueChange={this.handleCompanyChange}/>
                                         <TextField id='emailField' key='key-emailField'
@@ -82,11 +91,16 @@ export class Registration extends AccountForm {
                                         <a className='btn btn-dark' href='javascript:void(0);' onClick={this.onRegister}>Agree and Register</a>
                                     </form>
                                 </div>
-                                <div className='col-md-3 right-panel-separator'>
-                                    <h4 className='font-weight-light'>You have chosen &nbsp;</h4>
-                                    <PriceBox id='selectedPlanDetails' key='key-selectedPlanDetails'
-                                        planInfo={this.selectedPlanInfo} onPlanChangeCallBack={this.onPlanChange}/>
-                                </div>
+                                {
+                                    this.formType === 'SubscriberForm'
+                                        ?   <div className='col-md-3 right-panel-separator'>
+                                                <h4 className='font-weight-light'>You have chosen &nbsp;</h4>
+                                                <PriceBox id='selectedPlanDetails' key='key-selectedPlanDetails'
+                                                    planInfo={this.selectedPlanInfo} onPlanChangeCallBack={this.onPlanChange}/>
+                                            </div>
+                                        : <></>
+                                }
+                                
                             </div>
                         </div>
                         : <div id='allPlanSelectorholder' className='col-md-8'>
@@ -170,18 +184,23 @@ export class Registration extends AccountForm {
     }
 
     private get userToSave(): User {
-        return {
+        const user: User = {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
-            company: this.state.company,
-            newSubscription: {
+            company: this.state.company
+        };
+        if (this.formType === 'AccountAdminForm') {
+            user.isApp = true;
+        } else {
+            user.newSubscription =  {
                 details: {
                     plan: this.state.plan,
                     status: Enums.SubscriptionStatus.PENDING
                 }
-            }
-        };
+            };
+        }
+        return user;
     }
 
     /**
@@ -215,5 +234,21 @@ export class Registration extends AccountForm {
             formDisplay: true,
             plan: plan
         });
+    }
+
+    /**
+     * Returns the form type to be rendered.
+     */
+    private get formType(): string {
+        const path: string = this.urlDetails.pathname;
+        const search: string = this.urlDetails.search;
+        const params: URLSearchParams =  new URLSearchParams(search);
+        const app: string = params.get('app');
+        const plan: string = params.get('plan');
+        if (path === '/register' && AppUtils.isNotEmpty(app) && AppUtils.isNotEmpty(plan)) {
+            return 'SubscriberForm';
+        } else {
+            return 'AccountAdminForm';
+        }
     }
 }

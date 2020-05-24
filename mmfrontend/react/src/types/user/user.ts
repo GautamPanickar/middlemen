@@ -18,4 +18,6 @@ export interface User {
     gstNumber?: string;
     company?: string;    
     companyId?: string;
+    roles?: string[];
+    isApp?: boolean;
   }

@@ -47,6 +47,7 @@ describe('The UserService', () => {
                 const userData: UserDTO = {
                     name: 'Sachin Tendular',
                     email: 'srt@bcci.com',
+                    company: 'Heir Ltd', 
                     roles: ['ROLE_SUBSCRIBER']
                 };
                 (typeorm as any).getRepository.mockReturnValue({
@@ -59,32 +60,64 @@ describe('The UserService', () => {
                 }
             });
         });
-    });
 
-    describe('if there is no validation error', () => {
-        it('should not return error', () => {
-            const userData: UserDTO = {
-                name: 'Sachin Tendular',
-                email: 'srt@bcci.com',
-                roles: ['ROLE_SUBSCRIBER'],
-                contactAddress: {
-                    line1: 'BB Tanta',
-                    country: 'India',
-                    state: 'Kerala',
-                    phone: '8758875887'
-                },
-                billingAddress: {
-                    line1: 'BB Tanta',
-                    country: 'India',
-                    state: 'Kerala',
-                    phone: '8758875887'
-                }
-            };
-            (typeorm as any).getRepository.mockReturnValue({
-                save: () => Promise.resolve(userData)
+        describe('if there is no validation error', () => {
+            it('should not return error', () => {
+                const userData: UserDTO = {
+                    name: 'Sachin Tendular',
+                    email: 'srt@bcci.com',
+                    roles: ['ROLE_SUBSCRIBER'],
+                    company: 'Heir Ltd', 
+                    contactAddress: {
+                        line1: 'BB Tanta',
+                        country: 'India',
+                        state: 'Kerala',
+                        phone: '8758875887'
+                    },
+                    billingAddress: {
+                        line1: 'BB Tanta',
+                        country: 'India',
+                        state: 'Kerala',
+                        phone: '8758875887'
+                    }
+                };
+                (typeorm as any).getRepository.mockReturnValue({
+                    save: () => Promise.resolve(userData)
+                });
+                expect(userManager.updateUser(userData))
+                    .resolves.toBeDefined();
             });
-            expect(userManager.updateUser(userData))
-                .resolves.toBeDefined();
+        });
+
+        describe('if the user is an admin and has an app related', () => {
+            it('should return error in case of a validation error', async () => {
+                const userData: UserDTO = {
+                    name: 'Sachin Tendular',
+                    email: 'srt@bcci.com',
+                    roles: ['ROLE_SUBSCRIBER'],
+                    app_id: 'app123456',
+                    contactAddress: {
+                        line1: 'BB Tanta',
+                        country: 'India',
+                        state: 'Kerala',
+                        phone: '8758875887'
+                    },
+                    billingAddress: {
+                        line1: 'BB Tanta',
+                        country: 'India',
+                        state: 'Kerala',
+                        phone: '8758875887'
+                    }
+                };
+                (typeorm as any).getRepository.mockReturnValue({
+                    save: () => Promise.resolve(undefined)
+                });
+                try {
+                    const user = await userManager.updateUser(userData)
+                } catch(error) {
+                    expect(error).toMatchObject(new CustomException('App name cannot be empty'));
+                }
+            });
         });
     });
 });

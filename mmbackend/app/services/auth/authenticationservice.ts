@@ -11,17 +11,24 @@ import SomethingWrongException from '../../utils/exceptions/base/somethingwronge
 import SubscriptionService from '../../services/subscription/subscriptionservice';
 import UserManager from '../../managers/usermanager';
 import { AppUtils } from '../../utils/apputils';
+import AppDetails from '../../types/user/appdetails';
+import AppDetailsService from '../../services/user/appdetailsservice';
+import UserService from '../../services/user/userservice';
 
 class AuthenticationService {
     private user = UserModel;
     private encryptionService: EncryptionService;
     private subscriptionService: SubscriptionService;
     private userManager: UserManager;
+    private appDetailsService: AppDetailsService;
+    private userService: UserService;
 
     public constructor() {
         this.encryptionService = new BCryptEncryptionService();
         this.subscriptionService = new SubscriptionService();
         this.userManager = new UserManager();
+        this.appDetailsService = new AppDetailsService();
+        this.userService = new UserService();
     }
 
     /**
@@ -40,7 +47,7 @@ class AuthenticationService {
             this.userManager.setRoles(dto);
             const createdUser: User = await this.user.create({...dto,
                 password: hashedPassword, 
-                companyId:  AppUtils.uniqueCompanyId,
+                companyId:  (dto.isApp ? AppUtils.uniqueAppId : AppUtils.uniqueCompanyId),
                 activated: true});
             token = AuthenticationUtils.generateAuthenticationToken(createdUser._id, createdUser.email, createdUser.name);
             createdUser.password = undefined;
@@ -48,6 +55,15 @@ class AuthenticationService {
             // If the user has a subscription then save it.
             if (createdUser && dto.newSubscription && AppUtils.isNotEmpty(dto.company)) {
                 this.subscriptionService.saveSubscription(dto.newSubscription, createdUser._id.toString());
+            } else if (createdUser && dto.isApp) {
+                // If a new app account is being created then save the app details also.
+                const appDetailsToSave: AppDetails = {
+                    name: dto.company,
+                    code : AppUtils.getAppCode(dto.company)
+                };
+                const savedAppDetails: AppDetails = await this.appDetailsService.saveAppDetails(appDetailsToSave);
+                this.userService.updateUserAppDetails(createdUser._id, savedAppDetails._id);
+                createdUser.appCode = savedAppDetails.code;
             }
             return createdUser;
         } catch (error) {
