@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^24.9.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "jest": "^24.9.0",
     "razorpay": "^2.0.5",
     "ts-jest": "^24.3.0",
